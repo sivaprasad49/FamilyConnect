@@ -33,7 +33,7 @@
   .header .logo svg{width:32px;height:32px}
   .header h1{font-size:20px;font-weight:800;letter-spacing:2px;color:#fff}
   .header .tagline{font-size:12px;color:rgba(255,255,255,0.85);font-weight:500;margin-top:2px}
-  .header .sub{margin-top:8px;font-size:12px;color:rgba(255,255,255,0.75);font-weight:500;background:rgba(255,255,255,0.15);display:inline-block;padding:4px 12px;border-radius:20px}
+
 
   /* Filters */
   .filters{
@@ -147,7 +147,6 @@
     <h1>FAMILYCONNECT</h1>
   </div>
   <div class="tagline">Train Together, Grow Together</div>
-  <div class="sub" id="personInfo"></div>
 </div>
 
 <div class="filters">
@@ -176,7 +175,6 @@ let state={name:"Siva",day:DAYS[((new Date().getDay()+6)%7)],type:"All"};
 
 const DATA={
 Siva:{
-info:"37M | 164cm | 72kg | Right knee instability",
 days:{
 Monday:{
 Yoga:{time:"6:30 \u2013 7:00 AM",title:"Restore + Active Recovery",items:["Tadasana (Mountain Pose, engage quads + core) \u2013 1 min","Surya Namaskar A modified (cobra, no plank/chaturanga) \u2013 5 rounds","Vrikshasana (Tree, NO wall, foot on inner thigh) \u2013 1 min/side","Setu Bandhasana (Bridge, single-leg variation if able) \u2013 3\u00d720 sec hold","Supta Matsyendrasana (Supine Twist) \u2013 1.5 min/side","Viparita Karani (Legs-Up-the-Wall) \u2013 3 min","Shavasana \u2013 3 min"]},
@@ -246,7 +244,6 @@ Exercise:{time:"6:30 \u2013 8:00 PM",title:"GYM \u2013 Full Body C: Upper Back +
 }
 },
 Sutharia:{
-info:"32F | 150cm | 66kg | C-section 2018 | VBAC 2022 | Joint inflammation | Wrist pain",
 days:{
 Monday:{
 Yoga:{time:"6:30 \u2013 7:00 AM",title:"Restore + Active Recovery",note:"Wrist note: fists or forearms for floor poses. Bench for Surya Namaskar if needed.",items:["Tadasana (Mountain Pose, engage quads + core) \u2013 1 min","Surya Namaskar modified (cobra, bench for hands if wrists sore) \u2013 5 rounds","Vrikshasana (Tree, foot on inner thigh, wall ok) \u2013 1 min/side","Setu Bandhasana (Bridge, squeeze glutes at top) \u2013 3\u00d720 sec hold","Supta Matsyendrasana (Supine Twist) \u2013 1.5 min/side","Viparita Karani (Legs-Up-the-Wall) \u2013 3 min","Shavasana \u2013 3 min"]},
@@ -319,7 +316,6 @@ Exercise:{time:"6:30 \u2013 8:00 PM",title:"GYM \u2013 Full Body C: Upper Back +
 
 function render(){
   const d=DATA[state.name];
-  document.getElementById("personInfo").textContent=d.info;
 
   // Name buttons
   let nh="";
