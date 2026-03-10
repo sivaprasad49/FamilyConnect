@@ -1,11 +1,10 @@
-const CACHE_NAME = 'familyconnect-v2';
-const BASE = self.registration.scope;
+const CACHE_NAME = 'familyconnect-v3';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg'
+  '/FamilyConnect/',
+  '/FamilyConnect/index.html',
+  '/FamilyConnect/manifest.json',
+  '/FamilyConnect/icons/icon-192.svg',
+  '/FamilyConnect/icons/icon-512.svg'
 ];
 
 self.addEventListener('install', event => {
