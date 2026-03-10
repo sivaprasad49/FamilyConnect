@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8634A"/>
+      <stop offset="100%" style="stop-color:#F4845F"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
+  <!-- Heart -->
+  <path d="M96 148c-2 0-4-.8-5.4-2.2C78 134 52 112 52 88c0-15.5 12.5-28 28-28 8.8 0 16.8 4 22 10.4C107.2 64 115.2 60 124 60c15.5 0 28 12.5 28 28 0 24-26 46-38.6 57.8C112 147.2 110 148 108 148h-12z" fill="white" opacity="0.95"/>
+  <!-- Connected people -->
+  <circle cx="82" cy="92" r="7" fill="#E8634A"/>
+  <path d="M74 106c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#E8634A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="110" cy="92" r="7" fill="#E8634A"/>
+  <path d="M102 106c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="#E8634A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Connection line -->
+  <path d="M89 98c4 4 10 4 14 0" stroke="#E8634A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+</svg>
