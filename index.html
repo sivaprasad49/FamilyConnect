@@ -49,7 +49,9 @@
   .btn{border:none;border-radius:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
 
   /* Name buttons */
-  .name-btn{flex:1;padding:10px 0;font-size:15px;border-radius:12px}
+  .name-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .name-scroll::-webkit-scrollbar{display:none}
+  .name-btn{flex-shrink:0;padding:10px 20px;font-size:14px;border-radius:12px;white-space:nowrap}
   .name-btn.active{background:#1F6F78;color:#fff;box-shadow:0 3px 12px rgba(31,111,120,0.3)}
   .name-btn:not(.active){background:#E7F1F1;color:#16324F}
 
@@ -191,7 +193,7 @@
 </div>
 
 <div class="filters">
-  <div class="filter-row" id="nameRow"></div>
+  <div class="filter-row name-scroll" id="nameRow"></div>
   <div class="day-scroll" id="dayRow"></div>
   <div class="filter-row" id="typeRow"></div>
 </div>
@@ -206,15 +208,20 @@
 <script>
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const TYPES=["Yoga","Breathing","Exercise","Food"];
-const NAMES=["Siva","Sutharia"];
+const NAMES=["Siva","Sutharia","Swara","Sreenandha"];
+const KID_NAMES=["Swara","Sreenandha"];
 const dayShort={Monday:"Mon",Tuesday:"Tue",Wednesday:"Wed",Thursday:"Thu",Friday:"Fri",Saturday:"Sat",Sunday:"Sun"};
 const dayTag={
-  Siva:{Monday:"UPPER A",Tuesday:"LOWER A",Wednesday:"RECOVERY",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"V-TAPER"},
-  Sutharia:{Monday:"UPPER A",Tuesday:"LOWER A",Wednesday:"RECOVERY",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"FULL BODY"}
+  Siva:{Monday:"RECOVERY",Tuesday:"UPPER A",Wednesday:"LOWER A",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"V-TAPER"},
+  Sutharia:{Monday:"UPPER A",Tuesday:"LOWER A",Wednesday:"RECOVERY",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"FULL BODY"},
+  Swara:{Monday:"SPEED",Tuesday:"STRONG",Wednesday:"DANCE",Thursday:"ANIMAL",Friday:"JUMP",Saturday:"FAMILY",Sunday:"YOGA"},
+  Sreenandha:{Monday:"SAFARI",Tuesday:"COLORS",Wednesday:"DANCE",Thursday:"BALANCE",Friday:"BALLOON",Saturday:"FAMILY",Sunday:"YOGA"}
 };
 const dayEmoji={
-  Siva:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
-  Sutharia:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"}
+  Siva:{Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E0}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
+  Sutharia:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
+  Swara:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E3}",Thursday:"\u{1F7E2}",Friday:"\u{1F535}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
+  Sreenandha:{Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E3}",Thursday:"\u{1F7E0}",Friday:"\u{1F535}",Saturday:"\u{1F7E2}",Sunday:"\u{1F7E3}"}
 };
 const typeEmoji={Yoga:"\u{1F9D8}",Breathing:"\u{1F32C}\uFE0F",Exercise:"\u{1F4AA}",Food:"\u{1F34E}"};
 
@@ -226,65 +233,65 @@ const DATA={
 Siva:{
 days:{
 Monday:{
-Yoga:{time:"~5 min",title:"Warm-Up + Mobility \u2013 Upper Body A",items:["Tadasana with slow breathing \u2013 45 sec","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1-2 rounds","Light side-lying external rotation \u2013 1\u00d712/side [rotator cuff]","Wall Slide with Reach or Push-up Plus \u2013 1\u00d710-12 [serratus anterior]"]},
-Breathing:{time:"~2 min \u2013 before lifting",title:"Kegel: Long Holds",items:["Contract gently for 6-8 sec, then relax fully for at least 6-8 sec","Repeat 6-8 times while breathing normally","  \u21b3 Contraction-focused day \u2013 don't brace glutes/thighs/abs to fake it"]},
-Exercise:{time:"~43 min total",title:"Upper Body A + Core + Grip",sections:[
-{name:"STRENGTH (~33 min)",items:["Superset A \u2013 Chest + Back","A1: DB Bench Press, neutral or comfortable grip \u2013 3\u00d78-12","A2: One-Arm Bench-Supported DB Row \u2013 3\u00d78-12/side","Superset B \u2013 Shoulders + Lats","B1: Seated Neutral-Grip DB Shoulder Press \u2013 2\u00d78-12","B2: Lat Pulldown or Band-Assisted Pull-up \u2013 2\u00d78-12","Superset C \u2013 Side Delts + Triceps","C1: DB Lateral Raise \u2013 2\u00d712-15","C2: Cable Triceps Pushdown or DB Overhead Extension \u2013 2\u00d710-15","Superset D \u2013 Arms + Grip","D1: Incline DB Curl \u2013 2\u00d710-15","D2: Suitcase Carry \u2013 2\u00d730-40 sec/side [GRIP + FOREARMS + OBLIQUES]"]},
-{name:"CORE + KNEE FINISHER (~7 min)",items:["Dead Bug \u2013 2\u00d78/side [TVA + DEEP CORE]","Reverse Crunch or Controlled Curl-up \u2013 2\u00d710-15 [RECTUS ABDOMINIS]","Terminal Knee Extension or Short-Arc Quad Extension \u2013 1\u00d712-15/side [KNEE REHAB]","  \u21b3 Symptom-free only \u2013 skip if any pain, warmth or swelling"]},
-{name:"COOLDOWN (~3-5 min)",items:["Gentle chest, shoulder and lat stretches","Relaxed breathing"]}
+Yoga:{time:"~15 min",title:"Restorative Mobility \u2013 Active Recovery",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Gentle modified Surya Namaskar \u2013 1-2 rounds","Bhujangasana","Setu Bandhasana","Supine hamstring stretch","Gentle chest and lat opening","Supta Matsyendrasana","Viparita Karani","  \u21b3 Avoid deep knee flexion, forceful knee circles and unsupported balance when the knee feels uncertain"]},
+Breathing:{time:"~3 min",title:"Pelvic-Floor Relaxation",items:["Slow diaphragmatic breathing \u2013 on inhalation, consciously relax and lengthen the pelvic floor","Don't repeatedly squeeze at maximal effort"]},
+Exercise:{time:"~28-30 min total",title:"Active Recovery + Knee Rehab + Soleus + Small Muscles",sections:[
+{name:"KNEE & HIP REHABILITATION (~10 min)",items:["Quad Set \u2013 2\u00d710/side, 5-sec hold [KNEE REHAB]","Short-Arc Quad Extension \u2013 2\u00d712-15/side (no equip: towel/folded clothing under knee; otherwise Quad Set)","Supported Single-Leg Balance \u2013 2\u00d720-30 sec/side (no equip: fingertip support against wall)","Side-Lying Hip Abduction \u2013 2\u00d712-15/side [HIP ABDUCTORS]"]},
+{name:"SOLEUS, ANKLE & FOOT (~10 min)",items:["Bent-Knee Calf Raise \u2013 2\u00d715-20 [SOLEUS \u2013 1st weekly exposure] (no equip: seated or wall-supported bodyweight bent-knee calf raise)","Ankle Inversion \u2013 1-2\u00d712-15/side (self-resisted using the opposite foot) [posterior tibialis]","Ankle Eversion \u2013 1-2\u00d712-15/side (self-resisted using the opposite foot) [fibularis/peroneals]","Short-Foot Exercise \u2013 1\u00d78/side, 5-sec hold [intrinsic arch]","Toe Yoga \u2013 1\u00d78-10 each pattern"]},
+{name:"NECK, WRIST, HAND & FACE (~8-10 min)",items:["Chin Tuck \u2013 1\u00d78, hold 3-5 sec [deep neck flexors]","Four-Way Neck Isometric \u2013 1\u00d710 sec each direction [neck stabilizers]","Self-Resisted Wrist Flexion + Extension \u2013 1\u00d712-15 each","Palm-down individual finger lifts \u2013 1\u00d78-10 each finger","Open hand wide \u2192 gentle fist \u2013 1\u00d715-20 [hand circulation]","Optional facial mobility: smile-release, eyebrow raise, cheek shift, gentle jaw opening \u2013 5 reps each","  \u21b3 Don't use heavy neck resistance or jaw-resistance devices"]}
 ]}
 },
 Tuesday:{
-Yoga:{time:"~5 min",title:"Warm-Up \u2013 Lower Body A",items:["Tadasana \u2013 30 sec","Glute Bridge \u2013 10 reps","Quad Set \u2013 10 contractions/side","Modified Surya Namaskar \u2013 1 controlled round"]},
-Breathing:{time:"~2 min",title:"Kegel: Quick Flicks",items:["1-second gentle contraction followed by 2 seconds of complete relaxation","10 repetitions, rest, then repeat once"]},
-Exercise:{time:"~50 min total",title:"Lower Body A: Posterior Chain + Quads + Knee Control",sections:[
-{name:"STRENGTH (~31 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Romanian Deadlift \u2013 3\u00d78-10","A2: DB Hip Thrust \u2013 3\u00d710-12","Superset B \u2013 Quads + Hamstrings","B1: High-Bench Sit-to-Stand, shallow pain-free range \u2013 2\u00d78-10 [QUADS]","  \u21b3 If pain, warmth, swelling or instability: replace with Quad Sets 3\u00d710 + Straight-Leg Raise 2\u00d710-12, pain-free only","B2: Slider Hamstring Curl or Hamstring Walkout \u2013 2\u00d76-10","Superset C \u2013 Calves + Tibialis","C1: Standing Calf Raise \u2013 2\u00d712-15","C2: Tibialis Wall Raise \u2013 2\u00d715-20"]},
-{name:"HIP/KNEE STABILITY + CORE (~10-12 min)",items:["Side-Lying Hip Abduction or Clamshell \u2013 2\u00d712-15/side [HIP ABDUCTORS]","Pillow/Ball Adductor Squeeze \u2013 2\u00d720-30 sec [ADDUCTORS]","Terminal Knee Extension \u2013 2\u00d712-15/side [KNEE REHAB]","Standing Band March, Cable March or Seated Knee Lift \u2013 2\u00d710-12/side [HIP FLEXORS]","Side Plank \u2013 2\u00d720-30 sec/side [OBLIQUES]"]},
-{name:"COOLDOWN (~3-5 min)",items:["Hamstring, hip flexor and calf stretch","Relaxed breathing"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Upper Body A",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1 round","Wall Slide with Reach or Push-up Plus \u2013 1\u00d710-12","Side-Lying External Rotation without weight \u2013 1\u00d712/side [rotator cuff]"]},
+Breathing:{time:"~2 min",title:"Pelvic-Floor Contraction Practice",items:["6-8 gentle contractions, hold 5-6 sec, fully relax for at least the same duration","Continue normal breathing throughout"]},
+Exercise:{time:"~39-41 min total",title:"Upper Body A + Core",sections:[
+{name:"STRENGTH (~32-34 min)",items:["Superset A \u2013 Chest + Back","A1: DB Bench Press \u2013 3\u00d78-12 (no equip: Elevated or Floor Push-up)","A2: One-Arm Bench-Supported DB Row \u2013 3\u00d78-12/side (no equip: Prone W Pull \u2013 lift chest slightly, pull elbows toward ribs, squeeze upper back)","Superset B \u2013 Shoulders + Lats","B1: Seated Neutral-Grip DB Shoulder Press \u2013 2\u00d78-12 (no equip: Pike Push-up or Elevated Pike Push-up)","B2: Lat Pulldown \u2013 2\u00d78-12 (no equip: Prone Floor Pulldown \u2013 arms overhead, pull elbows toward hips while hovering hands)","Superset C \u2013 Side Delts + Triceps","C1: DB Lateral Raise \u2013 2\u00d712-15 (no equip: Wall Lateral Isometric, press outer arm into wall 20-30 sec/side)","C2: Cable Triceps Pushdown or DB Extension \u2013 2\u00d710-15 (no equip: Close-Grip Elevated Push-up or Diamond Wall Push-up)","Superset D \u2013 Arms + Grip","D1: Incline DB Curl \u2013 2\u00d710-15 (no equip: Self-Resisted Curl, opposite hand provides resistance)","D2: Suitcase Carry \u2013 2\u00d730-40 sec/side (no equip: Side Plank or Tall March with strong trunk bracing) [GRIP + FOREARMS + OBLIQUES]","  \u21b3 Body weight has no perfect replacement for a loaded row or pulldown \u2013 the prone W pull and prone floor pulldown maintain upper-back/lat activation. Return to loaded pulling when equipment is available."]},
+{name:"CORE (~7 min)",items:["Dead Bug \u2013 2\u00d78/side (alt: Heel Tap with abdominal brace) [TVA + DEEP CORE]","Reverse Crunch or Controlled Curl-Up \u2013 2\u00d710-15 (alt: Bent-Knee Curl-Up) [RECTUS ABDOMINIS]"]}
 ]}
 },
 Wednesday:{
-Yoga:{time:"~20-25 min",title:"Restorative Yoga + Mobility",items:["Tadasana breathing","Cat-Cow","Gentle modified Surya Namaskar","Bhujangasana","Setu Bandhasana","Supine hamstring stretch","Supta Matsyendrasana","Viparita Karani","Shavasana","  \u21b3 Avoid deep or painful knee flexion throughout"]},
-Breathing:{time:"~3 min",title:"Kegel: Reverse Kegels (Relaxation Day)",items:["Slow diaphragmatic breathing while consciously relaxing and lengthening the pelvic floor","  \u21b3 Relaxation-focused day \u2013 no contraction work today"]},
-Exercise:{time:"~30-40 min total",title:"Knee Rehab + Small-Muscle Block + Optional Conditioning",sections:[
-{name:"KNEE REHABILITATION (~8-10 min)",items:["Quad Set \u2013 2\u00d710 contractions/side, hold 5 sec","Short-Arc Quad Extension \u2013 2\u00d712-15/side","Supported Single-Leg Balance, eyes open \u2013 2\u00d720-30 sec/side","Side-Lying Leg Raise \u2013 1-2\u00d712-15/side","  \u21b3 Use fingertip support. Don't progress to eyes-closed balance while instability is present."]},
-{name:"SMALL-MUSCLE BLOCK (~8-10 min)",items:["Chin Tuck \u2013 1\u00d78, hold 3-5 sec [deep neck flexors]","Four-Way Neck Isometric \u2013 front, back, both sides, 1\u00d710 sec each [neck stabilizers]","Short-Foot Exercise \u2013 1\u00d78/side, hold 5 sec [intrinsic arch]","Toe Yoga \u2013 big toe up/others down, then reverse, 1\u00d78-10 each","Band or Cable Ankle Inversion and Eversion \u2013 1\u00d712-15 each direction/side [posterior tibialis + peroneals]","Wrist Flexion + Wrist Extension \u2013 1\u00d712-15 each","Finger Extension \u2013 1\u00d715-20 using a light elastic band or hair tie","  \u21b3 No band? Palm-down on a table, lift each finger separately 8-10 reps, then all four together 10-15 reps; or gently resist finger opening with the other hand 1\u00d712-15","Optional facial mobility (1-2 min): gentle smile-and-release, eyebrow raise-and-release, cheek puff, slow pain-free jaw opening, 5 reps each","  \u21b3 Don't clench hard or continue if there's jaw clicking or pain"]},
-{name:"OPTIONAL CONDITIONING (0-15 min, only if knee is at baseline)",items:["Flat treadmill or outdoor walking, easy-to-moderate pace; OR","Seated upper-body cable conditioning: alternate light rows and presses 30 sec each, 30 sec easy rest, 6-10 rounds"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Lower Body A",items:["Tadasana \u2013 30 sec","Glute Bridge \u2013 10 reps","Quad Set \u2013 10 contractions/side","Hip-hinge drill \u2013 10 reps","Modified Surya Namaskar \u2013 1 controlled round"]},
+Breathing:{time:"~2 min",title:"Pelvic-Floor Breathing Sync",items:["Gentle contraction during exhalation, complete relaxation during inhalation","Don't brace continuously"]},
+Exercise:{time:"~40-42 min total",title:"Lower Body A + Knee Control",sections:[
+{name:"STRENGTH (~30-32 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Romanian Deadlift \u2013 3\u00d78-10 (no equip: Body-Weight Hip Hinge or Supported Single-Leg Hip Hinge)","A2: DB Hip Thrust \u2013 3\u00d710-12 (no equip: Floor Glute Bridge; progress to Single-Leg Bridge)","Superset B \u2013 Quads + Hamstrings","B1: High-Bench Sit-to-Stand, shallow pain-free range \u2013 2\u00d78-10 (no equip: Chair Sit-to-Stand or Shallow Bodyweight Squat) [QUADS]","  \u21b3 Yellow: reduce depth/reps or use a supported shallow squat. Red: Quad Set 2-3\u00d710 + Straight-Leg Raise 2\u00d710-12 if comfortable.","B2: Slider Hamstring Curl \u2013 2\u00d76-10 (no equip: Hamstring Walkout)","Superset C \u2013 Calves + Tibialis","C1: Standing Calf Raise \u2013 2\u00d712-15 (no equip: same, bodyweight)","C2: Tibialis Wall Raise \u2013 2\u00d715-20 (no equip: same)"]},
+{name:"HIP STABILITY + CORE (~10 min)",items:["Side-Lying Hip Abduction or Clamshell \u2013 2\u00d712-15/side [HIP ABDUCTORS]","Side-Lying Hip Adduction \u2013 2\u00d710-15/side [ADDUCTORS]","Standing March or Cable March \u2013 2\u00d710-12/side (no equip: Slow High-Knee March with support) [HIP FLEXORS]","Side Plank \u2013 2\u00d720-30 sec/side (no equip: Bent-Knee Side Plank) [OBLIQUES]"]}
 ]}
 },
 Thursday:{
-Yoga:{time:"~5 min",title:"Warm-Up \u2013 Upper Body B",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1 round","Band Pull-Apart or light reverse fly \u2013 12 reps","Wall Slide with Lift-off or Incline Y-Raise \u2013 1\u00d710-12 [serratus + lower trapezius]"]},
-Breathing:{time:"~2 min",title:"Kegel: Elevator",items:["Gradually tighten light \u2192 medium \u2192 firm, hold briefly, then release gradually","Don't use maximal effort"]},
-Exercise:{time:"~43-44 min total",title:"Upper Body B + Core + Rotator Cuff",sections:[
-{name:"STRENGTH (~33 min)",items:["Superset A \u2013 Chest + Back","A1: Incline DB Press or Elevated Push-up \u2013 3\u00d78-12","A2: Chest-Supported DB Row \u2013 3\u00d78-12","Superset B \u2013 Chest + Lats","B1: Cable Fly or Flat Push-up \u2013 2\u00d710-15","B2: Straight-Arm Cable Pulldown or DB Pullover \u2013 2\u00d710-15","Superset C \u2013 Rear Delts + Side Delts","C1: Face Pull \u2013 2\u00d712-15","C2: DB Lateral Raise \u2013 2\u00d712-15","Superset D \u2013 Arms","D1: Hammer Curl \u2013 2\u00d710-15","D2: Overhead Triceps Extension \u2013 2\u00d710-15"]},
-{name:"CORE + CUFF + QUAD MICRO-DOSE (~9-10 min)",items:["Pallof Press \u2013 2\u00d710/side or 20-sec holds [DEEP CORE]","Side-Lying External Rotation \u2013 2\u00d712-15/side, light weight [ROTATOR CUFF]","Progressive Short-Arc Quad Extension or Terminal Knee Extension \u2013 2\u00d712-20/side, pain-free range, RPE 6-7 [KNEE \u2013 2nd weekly quad exposure]","  \u21b3 Use a light ankle weight or low cable with ankle cuff when available; otherwise slow 3-sec lowering + 3-sec squeeze at full comfortable extension","  \u21b3 Stop if warmth, swelling, pain above 2/10 or instability appears","  \u21b3 This is the planned 2nd weekly quad exposure \u2013 Saturday's Bulgarian split squat is a bonus 3rd, not the exercise the 2x/week claim depends on"]},
-{name:"COOLDOWN (~3-5 min)",items:["Chest, back and shoulder stretches","Relaxed breathing"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Upper Body B",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1 round","Wall Slide with Lift-Off or Incline Y-Raise \u2013 1\u00d710-12","Light reverse fly pattern \u2013 12 reps"]},
+Breathing:{time:"~2 min",title:"Pelvic-Floor Contraction Practice",items:["6-8 moderate contractions with complete relaxation between reps","Don't tighten the glutes, thighs or abdomen to create the contraction"]},
+Exercise:{time:"~39-41 min total",title:"Upper Body B + Core + Rotator Cuff",sections:[
+{name:"STRENGTH (~32-34 min)",items:["Superset A \u2013 Chest + Back","A1: Incline DB Press \u2013 3\u00d78-12 (no equip: Elevated Push-up, hands slightly wider than shoulders)","A2: Chest-Supported DB Row \u2013 3\u00d78-12 (no equip: Prone T-to-W Raise)","Superset B \u2013 Chest + Lats","B1: Cable Fly \u2013 2\u00d710-15 (no equip: Wide Elevated Push-up or Push-up with controlled chest squeeze)","B2: Straight-Arm Cable Pulldown or DB Pullover \u2013 2\u00d710-15 (no equip: Prone Snow Angel or Prone Floor Pulldown)","Superset C \u2013 Rear Delts + Side Delts","C1: Face Pull \u2013 2\u00d712-15 (no equip: Prone W Raise with external rotation)","C2: DB Lateral Raise \u2013 2\u00d712-15 (no equip: Wall Lateral Isometric)","Superset D \u2013 Arms","D1: Hammer Curl \u2013 2\u00d710-15 (no equip: Self-Resisted Neutral-Grip Curl)","D2: Overhead Triceps Extension \u2013 2\u00d710-15 (no equip: Close-Grip Elevated Push-up)"]},
+{name:"CORE + SHOULDER HEALTH (~7 min)",items:["Pallof Press \u2013 2\u00d710/side or 20-sec holds (no equip: Dead Bug with opposite-hand thigh press) [DEEP CORE]","Side-Lying External Rotation \u2013 2\u00d712-15/side (no equip: Wall External-Rotation Isometric, 20-30 sec/side) [ROTATOR CUFF]"]}
 ]}
 },
 Friday:{
-Yoga:{time:"~20-25 min",title:"Mobility / Yoga",items:["Tadasana","Cat-Cow","Gentle Surya Namaskar","Downward Dog","Supine hamstring stretch","Chest opener","Lat stretch","Setu Bandhasana","Viparita Karani","Shavasana"]},
-Breathing:{time:"~3 min",title:"Kegel: Reverse Kegels (Relaxation Day)",items:["Reverse Kegels and relaxed diaphragmatic breathing only","  \u21b3 Relaxation-focused day"]},
-Exercise:{time:"~25-40 min total",title:"Conditioning + Lower-Leg Support + Small-Muscle Block",sections:[
-{name:"OPTIONAL CONDITIONING (10-15 min)",items:["Same symptom-free options as Wednesday","Avoid incline treadmill walking and cycling for now"]},
-{name:"JOINT + LOWER-LEG WORK (~5-8 min)",items:["Quad Set \u2013 2\u00d710/side","Supported balance, eyes open \u2013 2\u00d720-30 sec/side","Calf Raise \u2013 1-2\u00d715","Tibialis Raise \u2013 1-2\u00d715-20"]},
-{name:"SMALL-MUSCLE BLOCK (~8-10 min)",items:["Repeat Wednesday's neck / wrist+finger / ankle invertor-evertor / intrinsic-foot circuit \u2013 2nd weekly exposure","Optional facial mobility as on Wednesday"]}
+Yoga:{time:"~18-20 min",title:"Mobility / Yoga",items:["Tadasana","Cat-Cow","Gentle modified Surya Namaskar","Downward Dog when comfortable","Supine hamstring stretch","Chest opener","Lat stretch","Setu Bandhasana","Viparita Karani","Shavasana"]},
+Breathing:{time:"~3 min",title:"Pelvic-Floor Relaxation",items:["Diaphragmatic breathing and complete relaxation only"]},
+Exercise:{time:"~18-25 min total",title:"Safe Conditioning + Small-Muscle Maintenance",sections:[
+{name:"SAFE CONDITIONING (~10-15 min, only when knee is at baseline)",items:["Flat treadmill or outdoor walking, easy-to-moderate intensity","Low-impact shadow boxing with controlled foot movement","Seated upper-body conditioning: alternate fast arm drives, light punches, relaxed recovery","Gentle swimming whenever realistically available","  \u21b3 Avoid incline walking and cycling while they continue to provoke symptoms"]},
+{name:"SMALL-MUSCLE MAINTENANCE (~8-10 min)",items:["Chin Tuck \u2013 1\u00d78","Four-Way Neck Isometric \u2013 1\u00d710 sec each direction","Self-resisted Wrist Flexion + Extension \u2013 1\u00d712-15 each","Finger Extension or tabletop finger lifts \u2013 1\u00d715","Short-Foot Exercise \u2013 1\u00d78/side","Toe Yoga \u2013 1\u00d78 each pattern","Self-resisted Ankle Inversion + Eversion \u2013 1\u00d712/side","Optional gentle facial-expression mobility \u2013 1 min"]}
 ]}
 },
 Saturday:{
-Yoga:{time:"~5 min",title:"Warm-Up \u2013 Lower Body B",items:["Tadasana \u2013 30 sec","Glute Bridge \u2013 10 reps","Quad Set \u2013 10 contractions/side","Modified Surya Namaskar \u2013 1 controlled round"]},
-Breathing:{time:"~2 min",title:"Kegel: Combination",items:["5 quick contractions followed by one 5-second hold and a full 8-10-second relaxation","Repeat 3-4 times"]},
-Exercise:{time:"~45-48 min total",title:"Lower Body B: Stability + Conditional Bulgarian Split Squat",sections:[
-{name:"STRENGTH (~30-32 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Deadlift from Raised Blocks \u2013 3\u00d78-10","A2: Glute Bridge or Hip Thrust \u2013 3\u00d710-15","Superset B \u2013 Quads (conditional) + Hamstrings","B1: Supported Bulgarian Split Squat \u2013 GREEN DAYS ONLY \u2013 2\u00d76-10/side","B2: Hamstring Walkout or Slider Curl \u2013 2\u00d76-10","Superset C \u2013 Calves + Tibialis","C1: Seated Calf Raise \u2013 2\u00d712-15","C2: Tibialis Wall Raise \u2013 2\u00d715-20"]},
-{name:"BULGARIAN SPLIT SQUAT RULES",items:["GREEN DAY \u2013 perform it: pain 0-2/10, no warmth/thickening/swelling, no instability. One-hand support, low rear-foot support, bodyweight or light DB, comfortable depth, lower under control ~3 sec, front knee tracking toward 2nd-3rd toe, stop with ~3 reps in reserve","YELLOW DAY \u2013 mild stiffness/tenderness/uncertainty: don't just repeat Tuesday's sit-to-stand. Try Supported Static Split Squat (rear foot on floor) 2\u00d76-8/side first, or Progressive Short-Arc/Terminal Knee Extension 2\u00d715-20/side. High-bench sit-to-stand only as last resort. Reduce depth/load 25-50%, don't progress that week.","\u26a0\ufe0f RED DAY \u2013 warmth, swelling, giving-way, limping, or pain \u22655/10: no loaded knee-bending exercise. Use Quad Set 2-3\u00d710, Straight-Leg Raise 2\u00d710-12 (if pain-free), Short-Arc Quad Extension 1-2\u00d712-15 (if pain-free).","  \u21b3 Don't combine Bulgarian split squats with step-ups, deep sumo squats and wall sits in the same workout","  \u21b3 Start once weekly. Consider a 2nd weekly exposure only after \u22654 consistently symptom-free weeks."]},
-{name:"HIP/KNEE STABILITY + CORE (~7-9 min)",items:["Side-Lying Leg Raise or Light Band Hip Abduction \u2013 2\u00d712-15/side [HIP ABDUCTORS]","Pillow/Ball Adductor Squeeze \u2013 2\u00d720-30 sec [ADDUCTORS]","Short-Arc Quad Extension \u2013 1-2\u00d712-15/side, only if needed and symptom-free","Standing Band March, Cable March or Seated Knee Lift \u2013 2\u00d710-12/side [HIP FLEXORS \u2013 2nd exposure]","Bird Dog \u2013 2\u00d78/side [LOWER BACK / ERECTORS]"]}
+Yoga:{time:"~8 min",title:"Warm-Up \u2013 Lower Body B",items:["Tadasana breathing","Cat-Cow","Glute Bridge \u2013 10","Quad Set \u2013 10/side","Hip-hinge drill \u2013 10","Ankle pumps \u2013 15","Modified Surya Namaskar \u2013 1-2 controlled rounds"]},
+Breathing:{time:"~3 min",title:"Pelvic-Floor Breathing Sync",items:["5 gentle quick contractions followed by one 5-second hold and a full 8-10-second relaxation","Repeat 3-4 times","  \u21b3 Stop if pelvic discomfort or difficulty relaxing develops"]},
+Exercise:{time:"~70-90 min total (optional full length \u2013 end earlier when work is done)",title:"Lower Body B: Complete Lower Leg + Core",sections:[
+{name:"MAIN LOWER-BODY STRENGTH (~35-40 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Deadlift from Raised Blocks \u2013 3\u00d78-10 (no equip: Slow Bodyweight Hip Hinge or Supported Single-Leg Hip Hinge)","A2: DB Hip Thrust \u2013 3\u00d710-15 (no equip: Glute Bridge or Single-Leg Bridge)","Superset B \u2013 Quads (conditional) + Hamstrings","B1: Supported Bulgarian Split Squat \u2013 GREEN DAYS ONLY \u2013 2-3\u00d76-10/side (no equip: Supported Bodyweight Split Squat, rear foot on floor)","B2: Slider Hamstring Curl \u2013 3\u00d76-10 (no equip: Hamstring Walkout)","Superset C \u2013 Hip Abductors + Adductors","C1: Side-Lying Hip Abduction \u2013 2\u00d712-15/side","C2: Side-Lying Hip Adduction or Pillow Squeeze \u2013 2\u00d712-15/side","Superset D \u2013 Hip Flexors + Balance","D1: Standing March or Cable March \u2013 2\u00d710-12/side (no equip: Slow Supported High-Knee March)","D2: Supported Single-Leg Balance \u2013 2\u00d720-30 sec/side (no equip: same with fingertip support)"]},
+{name:"BULGARIAN SPLIT SQUAT RULES",items:["GREEN DAY \u2013 perform it: pain 0-2/10, no warmth/thickening/swelling, no instability, knee at baseline that morning. One-hand support, low rear-foot support, bodyweight or light DB, comfortable depth, lower ~3 sec, front knee tracking toward 2nd-3rd toe, stop with ~3 reps in reserve","YELLOW DAY \u2013 use the first smooth, pain-free option: 1) Supported static split squat, rear foot on floor \u2013 2\u00d76-8/side, 2) Short-Arc Quad Extension \u2013 2\u00d715-20/side, 3) Terminal Knee Extension \u2013 2\u00d715-20/side, 4) Shallow high-chair sit-to-stand \u2013 2\u00d76-8","\u26a0\ufe0f RED DAY \u2013 no loaded knee-bending work. Use Quad Set 2-3\u00d710, Straight-Leg Raise 2\u00d710-12 if comfortable, Short-Arc Quad Extension 1-2\u00d712-15 if comfortable"]},
+{name:"COMPLETE LOWER-LEG BLOCK (~12-15 min)",items:["Seated Calf Raise \u2013 3\u00d712-20 [SOLEUS \u2013 2nd weekly exposure] (no equip: Bent-Knee Bodyweight Calf Raise)","Standing Calf Raise \u2013 2\u00d710-15 [gastrocnemius]","Tibialis Wall Raise \u2013 2\u00d715-20 [tibialis anterior]","Ankle Inversion \u2013 2\u00d712-15/side, self-resisted [posterior tibialis]","Ankle Eversion \u2013 2\u00d712-15/side, self-resisted [fibularis/peroneals]","Short-Foot + Toe Yoga \u2013 1-2 rounds [intrinsic foot]"]},
+{name:"CORE + KNEE FINISHER (~10-12 min)",items:["Bird Dog \u2013 2\u00d78/side [LOWER BACK / ERECTORS]","Reverse Crunch \u2013 2\u00d710-15 (no equip: Bent-Knee Curl-Up)","Side Plank \u2013 2\u00d720-40 sec/side (no equip: Bent-Knee Side Plank)","Short-Arc Quad Extension or Terminal Knee Extension \u2013 1-2\u00d712-15/side (no equip: Quad Set)"]},
+{name:"COOLDOWN (~8-10 min)",items:["Supine hamstring stretch","Gentle hip-flexor stretch","Calf stretch with straight knee","Calf stretch with slightly bent knee","Gentle glute stretch","Viparita Karani","Slow relaxed breathing","  \u21b3 The full 90 minutes is optional. End earlier when the planned work is complete or technique declines."]}
 ]}
 },
 Sunday:{
-Yoga:{time:"~5 min",title:"Warm-Up \u2013 Athletic V-Taper",items:["Tadasana breathing","Cat-Cow","Modified Surya Namaskar \u2013 1-2 rounds","Shoulder circles and scapular retraction"]},
-Breathing:{time:"~2 min",title:"Kegel: Breathing Sync",items:["Gentle contraction on exhale, complete relaxation on inhale","Don't brace continuously"]},
-Exercise:{time:"~48 min total",title:"Athletic V-Taper + Carries + Core",sections:[
-{name:"STRENGTH (~34-36 min) \u2013 no direct arm isolation, already covered Mon/Thu",items:["Superset A \u2013 Chest/Push + Back/Pull","A1: Elevated Push-up or DB Floor Press \u2013 3\u00d78-15","A2: Lat Pulldown or Band-Assisted Pull-up \u2013 3\u00d78-12","Superset B \u2013 Shoulders + Back","B1: Seated DB Shoulder Press, light/moderate \u2013 2\u00d78-12","B2: Chest-Supported DB Row \u2013 2\u00d78-12","Superset C \u2013 Shoulder Width","C1: DB Lateral Raise \u2013 2\u00d712-15","C2: Rear-Delt Fly \u2013 2\u00d712-15","Superset D \u2013 Carries + Core","D1: Farmer Carry \u2013 2-3\u00d730-40 sec [GRIP + TRAPS + CORE]","D2: Cable Woodchop \u2013 2\u00d710/side [OBLIQUES]"]},
-{name:"FINISHER (~6-8 min)",items:["Reverse Crunch or Cable Crunch \u2013 2\u00d710-15 [RECTUS ABDOMINIS \u2013 2nd direct exposure]","Front Plank \u2013 2\u00d720-40 sec","Optional easy flat walking for the remaining time, only when the knee is calm"]}
+Yoga:{time:"~8 min",title:"Warm-Up \u2013 Athletic V-Taper",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1-2 rounds","Shoulder circles","Scapular retraction","Wall Slide with Reach \u2013 1\u00d710","Push-up Plus \u2013 1\u00d710"]},
+Breathing:{time:"~3 min",title:"Pelvic-Floor Relaxation & Breathing",items:["Gentle contraction on exhalation, complete relaxation on inhalation","Don't hold tension continuously"]},
+Exercise:{time:"~70-90 min total (optional full length \u2013 end earlier when work is done)",title:"Athletic V-Taper + Carries + Core + Conditioning",sections:[
+{name:"V-TAPER STRENGTH (~38-45 min) \u2013 no direct arm isolation, already covered Tue/Thu",items:["Superset A \u2013 Chest/Push + Back/Pull","A1: Elevated Push-up or DB Floor Press \u2013 3\u00d78-15 (no equip: Wall, Bench or Floor Push-up)","A2: Lat Pulldown \u2013 3\u00d78-12 (no equip: Prone Floor Pulldown)","Superset B \u2013 Shoulders + Back","B1: Seated DB Shoulder Press \u2013 2-3\u00d78-12 (no equip: Pike Push-up)","B2: Chest-Supported DB Row \u2013 3\u00d78-12 (no equip: Prone T-to-W Raise)","Superset C \u2013 Shoulder Width","C1: DB Lateral Raise \u2013 3\u00d712-15 (no equip: Wall Lateral Isometric)","C2: Rear-Delt Fly \u2013 3\u00d712-15 (no equip: Prone T Raise)","Superset D \u2013 Rear Delts + Serratus","D1: Face Pull \u2013 2\u00d712-15 (no equip: Prone W Raise)","D2: Push-up Plus or Cable Serratus Press \u2013 2\u00d710-15 (no equip: Push-up Plus against wall, bench or floor)","Superset E \u2013 Carries + Grip","E1: Farmer Carry \u2013 2-3\u00d730-45 sec [GRIP + TRAPS + CORE]","E2: Suitcase Carry \u2013 2\u00d730-40 sec/side (no equip: Side Plank)","  \u21b3 No exact bodyweight substitute for heavy grip loading \u2013 use side planks, fist-open/close drills, fingertip wall pressure, controlled tall marching. Resume loaded carries when equipment is available."]},
+{name:"CORE (~10-12 min)",items:["Cable Woodchop \u2013 2\u00d710/side (no equip: Side-Plank Rotation or Standing Diagonal Reach) [OBLIQUES]","Reverse Crunch or Cable Crunch \u2013 2\u00d710-15 (no equip: Reverse Crunch) [RECTUS ABDOMINIS \u2013 2nd direct exposure]","Front Plank \u2013 2\u00d720-45 sec (no equip: Elevated Front Plank)","Optional Dead Bug \u2013 1-2\u00d78/side"]},
+{name:"CONDITIONING (~10-20 min, when knee is calm)",items:["Flat walking","Easy swimming","Seated upper-body intervals","Low-impact shadow boxing","Alternating 30 sec moderate / 30-60 sec easy","  \u21b3 Should improve breathing and work capacity without turning Saturday and Sunday into two exhausting full-body days"]},
+{name:"COOLDOWN (~8-10 min)",items:["Chest stretch","Lat stretch","Rear-shoulder stretch","Gentle neck mobility","Supine twist","Viparita Karani","Shavasana or slow breathing"]}
 ]}
 }
 },
@@ -405,13 +412,133 @@ sections:[
 {name:"FLEXIBILITY",items:["80/20 approach: mostly minimally processed food with planned flexibility","Plan sweets and fried snacks instead of grazing unpredictably","Don't start high-dose iron/zinc/biotin or vitamin supplements without a demonstrated need"]}
 ]
 }
+},
+Swara:{
+days:{
+Monday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Slow breathing: smell the flower, blow the candle – 5 breaths","Gentle calf and shoulder stretch"]},
+Exercise:{time:"30 min total",title:"Speed & Agility",sections:[
+{name:"WARM-UP (5 min)",items:["March with arm swings – 60 sec","Side steps – 30 sec each way","Easy high knees – 30 sec","Ankle circles + shoulder circles – 30 sec each","Two easy practice runs across the room"]},
+{name:"QUICK-FEET CIRCUIT (18 min)",items:["Tape ladder: one foot in each box – 3 passes","Side shuffle along a tape line – 3 passes","Forward-backward line hops – 3×20 sec","Sock-cone zigzag run – 4 passes","Fast-feet / freeze game – 4×30 sec","Rest and sip water as needed"]},
+{name:"BALANCE SKILL (5 min)",items:["Single-leg stand – 2×20 sec/side","Heel-to-toe tape-line walk – 2 passes","Catch a soft ball while standing tall – 10 catches"]}
+]}
+},
+Tuesday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Five slow breaths; relax shoulders and jaw"]},
+Exercise:{time:"30 min total",title:"Strong Body",sections:[
+{name:"WARM-UP (5 min)",items:["Cat-Cow – 6 reps","Glute bridge – 8 reps","Arm circles – 10 each way","Body-weight squat to a chair – 8 reps"]},
+{name:"STRENGTH CIRCUIT (20 min)",items:["Complete 2 rounds. Rest 30-45 sec between moves.","Chair squat – 10-12 reps","Incline push-up on a sturdy counter or wall – 8-12 reps","Backpack row with a very light backpack – 10 reps/side, parent supervised","Glute bridge – 12-15 reps","Bird Dog – 8 reps/side","Calf raise – 15 reps","Front plank from knees or elevated surface – 15-25 sec"]},
+{name:"STRETCH (3 min)",items:["Child's Pose","Standing quad stretch with support","Chest-opening stretch"]}
+]}
+},
+Wednesday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Lie down and notice heartbeat slowing"]},
+Exercise:{time:"30 min total",title:"Dance Fitness",sections:[
+{name:"WARM-UP (5 min)",items:["Step-touch with music","Reach high / reach low","Hip circles and shoulder rolls"]},
+{name:"DANCE GAMES (20 min)",items:["Follow-the-leader dance – 4 min","Freeze dance – 4 min","Four-corner dance: each corner has a move – 5 min","Mirror game with parent or sister – 4 min","Favorite-song free dance – 3 min"]},
+{name:"MOBILITY (3 min)",items:["Butterfly stretch","Side reach","Gentle forward fold"]}
+]}
+},
+Thursday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Cobra to Child's Pose, slowly"]},
+Exercise:{time:"30 min total",title:"Animal Athlete",sections:[
+{name:"WARM-UP (5 min)",items:["Bear breathing on hands and knees","Easy frog squat without jumping","Tall giraffe reaches","Slow crab position practice"]},
+{name:"ANIMAL CIRCUIT (18 min)",items:["Complete 2 rounds, 30 sec each move with 20 sec rest.","Bear crawl – short distance","Crab walk – short distance","Frog jumps – soft landings","Penguin side steps","Inchworm walk","Cheetah run in place"]},
+{name:"CORE & CONTROL (5 min)",items:["Dead Bug – 8/side","Side plank from knees – 15 sec/side","Superman – 8 slow reps"]}
+]}
+},
+Friday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Calf stretch and slow breathing"]},
+Exercise:{time:"30 min total",title:"Jump & Land",sections:[
+{name:"WARM-UP (5 min)",items:["March, easy jog and ankle bounces","Practice quiet \"ninja\" landings: knees soft, chest tall"]},
+{name:"JUMP SKILLS (18 min)",items:["Two-foot forward jump and stick landing – 8","Side-to-side line hops – 3×20 sec","Hopscotch pattern – 4 passes","Skipping rope or imaginary rope – 5×30 sec","Star jumps – 3×8","Broad jump only as far as she can land quietly – 5"]},
+{name:"REACTION GAME (5 min)",items:["Parent calls: forward, back, left, right, freeze","Keep area clear and movements controlled"]}
+]}
+},
+Saturday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Each person says one movement they improved"]},
+Exercise:{time:"30 min total",title:"Family Challenge",sections:[
+{name:"WARM-UP (5 min)",items:["Family follow-the-leader mobility"]},
+{name:"OBSTACLE COURSE (20 min)",items:["Build 5 safe stations using tape, pillows and soft objects.","Station 1: tape-line balance walk","Station 2: 10 chair squats","Station 3: crawl under a table only when fully safe and supervised","Station 4: toss rolled socks into a basket","Station 5: side shuffle around pillows","Complete 3-4 rounds; score smooth form, not speed"]},
+{name:"STRETCH (3 min)",items:["Family stretch circle"]}
+]}
+},
+Sunday:{
+Breathing:{time:"2 min",title:"Relax",items:["Shavasana with five slow breaths"]},
+Exercise:{time:"30 min total",title:"Yoga & Reset",sections:[
+{name:"WARM-UP (5 min)",items:["Tadasana breathing","Cat-Cow","Easy Sun Salutation – 2 rounds"]},
+{name:"YOGA FLOW (20 min)",items:["Tree Pose – 20-30 sec/side","Warrior I – 20 sec/side","Warrior II – 20 sec/side","Downward Dog – 20 sec","Cobra – 15 sec","Bridge – 10 reps","Butterfly Pose – 45 sec","Seated twist – 20 sec/side","Repeat the flow once if comfortable"]},
+{name:"BALANCE (3 min)",items:["Toe-to-heel walk and one-leg balance"]}
+]}
+}
+}
+},
+Sreenandha:{
+days:{
+Monday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Five butterfly breaths"]},
+Exercise:{time:"30 min total",title:"Animal Safari",note:"Because of her previous elbow injury, crawling and hands-on-floor games should stay pain-free – stop if elbow pain, swelling or limited movement returns.",sections:[
+{name:"HELLO WARM-UP (5 min)",items:["March like an elephant","Reach like a tall giraffe","Flap arms like a butterfly","Tiptoe like a quiet cat"]},
+{name:"SAFARI GAME (20 min)",items:["Move 30-40 sec, then rest or change animal. Repeat favorite animals.","Penguin walk","Bunny hops with soft landings","Flamingo balance with parent support","Snake wiggle on the floor","Bear crawl only if elbows feel completely comfortable; otherwise march like a bear","Cheetah run in place","Turtle slow walk carrying a small pillow"]},
+{name:"STRETCH (3 min)",items:["Butterfly legs","Reach for the sky","Hug knees while lying down"]}
+]}
+},
+Tuesday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Sit and take five slow breaths"]},
+Exercise:{time:"30 min total",title:"Colors & Shapes",sections:[
+{name:"WARM-UP (5 min)",items:["Walk around the room and name colors","Draw circles in the air with arms"]},
+{name:"COLOR GAMES (20 min)",items:["Place colored paper or toys around the room.","Call a color: walk, march or tiptoe to it","Call a shape: make the shape with arms","Red light / green light","Jump over a tape line, then freeze","Move like an animal to the next color","Keep rounds short and praise listening"]},
+{name:"BALANCE (3 min)",items:["Walk on a tape line holding a parent's finger","Stand like a flamingo for 5-10 sec/side"]}
+]}
+},
+Wednesday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Lie down and listen to one quiet song"]},
+Exercise:{time:"30 min total",title:"Dance & Freeze",sections:[
+{name:"WARM-UP (5 min)",items:["Clap, march and sway to music"]},
+{name:"DANCE GAMES (20 min)",items:["Freeze dance","Copy parent's move","Slow song / fast song","High move / low move","Turn around, clap twice, touch toes","Stuffed-animal dance partner","Finish with her favorite song"]},
+{name:"STRETCH (3 min)",items:["Reach side to side","Butterfly stretch","Gentle shoulder rolls"]}
+]}
+},
+Thursday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Slow ankle circles and breathing"]},
+Exercise:{time:"30 min total",title:"Balance Adventure",sections:[
+{name:"WARM-UP (5 min)",items:["March over imaginary puddles","Heel raises holding support","Side steps"]},
+{name:"BALANCE TRAIL (18 min)",items:["Tape-line walk","Step over pillows—do not jump from furniture","Walk around a cushion","Stand on one foot with parent support","Tiptoe to a stuffed animal","Carry a soft toy on a paper plate","Walk backward only with adult close by"]},
+{name:"TOSS GAME (5 min)",items:["Throw rolled socks into a basket from different tape marks"]}
+]}
+},
+Friday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Blow pretend bubbles slowly"]},
+Exercise:{time:"30 min total",title:"Balloon & Ball Day",sections:[
+{name:"WARM-UP (5 min)",items:["Reach up, down and side to side","Gentle marching"]},
+{name:"BALL GAMES (20 min)",items:["Balloon tap: keep it off the floor","Roll a soft ball to parent","Kick a soft ball between pillow goals","Two-hand underarm toss into a basket","Catch a large soft ball from a short distance","Follow the rolling ball and stop it with two hands"]},
+{name:"STRETCH (3 min)",items:["Reach arms overhead","Calf stretch against wall","Big self-hug"]}
+]}
+},
+Saturday:{
+Breathing:{time:"2 min",title:"Calm Finish",items:["Sit together and breathe slowly"]},
+Exercise:{time:"30 min total",title:"Family Obstacle Play",note:"Because of her previous elbow injury, crawling and hands-on-floor games should stay pain-free – stop if elbow pain, swelling or limited movement returns.",sections:[
+{name:"WARM-UP (5 min)",items:["Family marching train"]},
+{name:"SAFE COURSE (20 min)",items:["Make 4-5 stations; adult checks every station.","Walk on tape line","Step over one pillow","Toss socks into basket","Dance at the music station","Crawl through a wide safe tunnel only if elbows are pain-free; otherwise duck-walk around it","Carry a stuffed animal to the finish","Repeat 3-4 times without racing"]},
+{name:"CELEBRATE (3 min)",items:["High-five, sticker or happy dance"]}
+]}
+},
+Sunday:{
+Breathing:{time:"2 min",title:"Rest",items:["Lie still with a stuffed animal on the tummy and watch it rise and fall"]},
+Exercise:{time:"30 min total",title:"Yoga Story",sections:[
+{name:"WARM-UP (5 min)",items:["Mountain Pose","Wave arms like tree branches","Cat-Cow slowly"]},
+{name:"STORY YOGA (20 min)",items:["Butterfly flies to the garden","Cat stretches","Dog looks down","Cobra wakes up","Frog sits low, then stands tall","Tree grows on each leg with support","Bridge crosses the river","Child's Pose rests in the cave","Repeat favorite poses through the story"]},
+{name:"BALANCE (3 min)",items:["Walk like a queen on a tape line"]}
+]}
+}
+}
 }
 };
 
 // ---------- Weekly check-in (localStorage, one persistent record per person) ----------
 const HEIGHT_M={Siva:1.64,Sutharia:1.50};
 function todayKey(){return new Date().toLocaleDateString('en-CA')}
-function blankCheckin(){return{weight:"",waist:"",hip:"",water:"",food:"",notes:"",updatedAt:""}}
+function blankCheckin(){return{weight:"",waist:"",hip:"",water:"",food:"",moved:"",fun:"",notes:"",updatedAt:""}}
 function getCheckin(name){
   try{const all=JSON.parse(localStorage.getItem('fc_checkin_v1')||'{}');return Object.assign(blankCheckin(),all[name]||{})}
   catch(e){return blankCheckin()}
@@ -424,8 +551,7 @@ function saveCheckinField(name,patch){
   }catch(e){}
 }
 function onCheckinInput(field,val){saveCheckinField(state.name,{[field]:val});render()}
-function setWater(level){const c=getCheckin(state.name);saveCheckinField(state.name,{water:c.water===level?"":level});render()}
-function setFood(level){const c=getCheckin(state.name);saveCheckinField(state.name,{food:c.food===level?"":level});render()}
+function setLevel(field,level){const c=getCheckin(state.name);const patch={};patch[field]=c[field]===level?"":level;saveCheckinField(state.name,patch);render()}
 
 // ---------- Rendering ----------
 function renderSections(sec,cardCls){
@@ -477,7 +603,8 @@ function renderFoodCard(food){
 
 function renderDay(d){
   const dayData=d.days[state.day];
-  const availTypes=d.food?TYPES:TYPES.filter(t=>t!=="Food");
+  const hasYoga=!!(d.days.Monday&&d.days.Monday.Yoga);
+  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga));
   const types=state.type==="All"?availTypes:(availTypes.includes(state.type)?[state.type]:availTypes);
   let html=`<div class="day-header"><span class="emoji">${dayEmoji[state.name][state.day]}</span><div><h2>${state.day}</h2></div><span class="tag">${dayTag[state.name][state.day]}</span></div>`;
 
@@ -496,43 +623,75 @@ function renderDay(d){
 function renderProgress(){
   const name=state.name;
   const c=getCheckin(name);
-  const h=HEIGHT_M[name];
-  const bmi=(c.weight&&h)?(parseFloat(c.weight)/(h*h)).toFixed(1):null;
+  const isKid=KID_NAMES.includes(name);
 
   let html=`<div class="day-header"><span class="emoji">\u{1F4CA}</span><div><h2>Progress</h2></div><span class="tag">${name.toUpperCase()}</span></div>`;
 
-  html+=`<div class="prog-card">
-    <div class="prog-title">Weekly Check-In</div>
-    ${c.updatedAt?`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Last updated ${c.updatedAt}</div>`:`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Not logged yet</div>`}
+  if(isKid){
+    html+=`<div class="prog-card">
+      <div class="prog-title">Weekly Check-In</div>
+      ${c.updatedAt?`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Last updated ${c.updatedAt}</div>`:`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Not logged yet</div>`}
 
-    <label class="prog-label">Weight (kg)</label>
-    <input class="prog-input" type="number" step="0.1" placeholder="kg" value="${c.weight}" onchange="onCheckinInput('weight',this.value)"/>
-    ${bmi?`<div class="bmi-pill"><span class="bmi-val">${bmi}</span><span class="bmi-label">BMI</span></div>`:""}
+      <div class="prog-subtitle">Did she move today?</div>
+      <div class="flag-row">
+        <div class="flag-chip ${c.moved==="No"?"active-red":""}" onclick="setLevel('moved','No')">Not yet</div>
+        <div class="flag-chip ${c.moved==="A little"?"active-yellow":""}" onclick="setLevel('moved','A little')">A little</div>
+        <div class="flag-chip ${c.moved==="Lots"?"active-green":""}" onclick="setLevel('moved','Lots')">Lots!</div>
+      </div>
 
-    <label class="prog-label" style="margin-top:12px">Waist (cm)</label>
-    <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.waist}" onchange="onCheckinInput('waist',this.value)"/>
+      <div class="prog-subtitle">Did she have fun?</div>
+      <div class="flag-row">
+        <div class="flag-chip ${c.fun==="No"?"active-red":""}" onclick="setLevel('fun','No')">Not really</div>
+        <div class="flag-chip ${c.fun==="Kind of"?"active-yellow":""}" onclick="setLevel('fun','Kind of')">Kind of</div>
+        <div class="flag-chip ${c.fun==="Yes"?"active-green":""}" onclick="setLevel('fun','Yes')">Yes!</div>
+      </div>
 
-    <label class="prog-label" style="margin-top:12px">Hip (cm)</label>
-    <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.hip}" onchange="onCheckinInput('hip',this.value)"/>
+      <div class="prog-subtitle">Drank water?</div>
+      <div class="flag-row">
+        <div class="flag-chip ${c.water==="No"?"active-red":""}" onclick="setLevel('water','No')">Not yet</div>
+        <div class="flag-chip ${c.water==="Yes"?"active-green":""}" onclick="setLevel('water','Yes')">Yes</div>
+      </div>
 
-    <div class="prog-subtitle">Water intake</div>
-    <div class="flag-row">
-      <div class="flag-chip ${c.water==="Low"?"active-red":""}" onclick="setWater('Low')">Low</div>
-      <div class="flag-chip ${c.water==="OK"?"active-yellow":""}" onclick="setWater('OK')">OK</div>
-      <div class="flag-chip ${c.water==="Good"?"active-green":""}" onclick="setWater('Good')">Good</div>
-    </div>
+      <label class="prog-label" style="margin-top:12px">Favorite part today</label>
+      <textarea class="prog-input" rows="2" placeholder="What did she enjoy most?" onchange="onCheckinInput('notes',this.value)">${c.notes}</textarea>
+      <div class="prog-hint">A simple weekly star check-in \u2013 no dates to keep up with, update it whenever.</div>
+    </div>`;
+  } else {
+    const h=HEIGHT_M[name];
+    const bmi=(c.weight&&h)?(parseFloat(c.weight)/(h*h)).toFixed(1):null;
+    html+=`<div class="prog-card">
+      <div class="prog-title">Weekly Check-In</div>
+      ${c.updatedAt?`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Last updated ${c.updatedAt}</div>`:`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Not logged yet</div>`}
 
-    <div class="prog-subtitle">Food / macro adherence</div>
-    <div class="flag-row">
-      <div class="flag-chip ${c.food==="Poor"?"active-red":""}" onclick="setFood('Poor')">Poor</div>
-      <div class="flag-chip ${c.food==="OK"?"active-yellow":""}" onclick="setFood('OK')">OK</div>
-      <div class="flag-chip ${c.food==="Good"?"active-green":""}" onclick="setFood('Good')">Good</div>
-    </div>
+      <label class="prog-label">Weight (kg)</label>
+      <input class="prog-input" type="number" step="0.1" placeholder="kg" value="${c.weight}" onchange="onCheckinInput('weight',this.value)"/>
+      ${bmi?`<div class="bmi-pill"><span class="bmi-val">${bmi}</span><span class="bmi-label">BMI</span></div>`:""}
 
-    <label class="prog-label" style="margin-top:12px">Notes</label>
-    <textarea class="prog-input" rows="2" placeholder="Anything worth remembering..." onchange="onCheckinInput('notes',this.value)">${c.notes}</textarea>
-    <div class="prog-hint">Update whenever you actually measure \u2013 weekly is plenty. Nothing here expires or resets.</div>
-  </div>`;
+      <label class="prog-label" style="margin-top:12px">Waist (cm)</label>
+      <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.waist}" onchange="onCheckinInput('waist',this.value)"/>
+
+      <label class="prog-label" style="margin-top:12px">Hip (cm)</label>
+      <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.hip}" onchange="onCheckinInput('hip',this.value)"/>
+
+      <div class="prog-subtitle">Water intake</div>
+      <div class="flag-row">
+        <div class="flag-chip ${c.water==="Low"?"active-red":""}" onclick="setLevel('water','Low')">Low</div>
+        <div class="flag-chip ${c.water==="OK"?"active-yellow":""}" onclick="setLevel('water','OK')">OK</div>
+        <div class="flag-chip ${c.water==="Good"?"active-green":""}" onclick="setLevel('water','Good')">Good</div>
+      </div>
+
+      <div class="prog-subtitle">Food / macro adherence</div>
+      <div class="flag-row">
+        <div class="flag-chip ${c.food==="Poor"?"active-red":""}" onclick="setLevel('food','Poor')">Poor</div>
+        <div class="flag-chip ${c.food==="OK"?"active-yellow":""}" onclick="setLevel('food','OK')">OK</div>
+        <div class="flag-chip ${c.food==="Good"?"active-green":""}" onclick="setLevel('food','Good')">Good</div>
+      </div>
+
+      <label class="prog-label" style="margin-top:12px">Notes</label>
+      <textarea class="prog-input" rows="2" placeholder="Anything worth remembering..." onchange="onCheckinInput('notes',this.value)">${c.notes}</textarea>
+      <div class="prog-hint">Update whenever you actually measure \u2013 weekly is plenty. Nothing here expires or resets.</div>
+    </div>`;
+  }
 
   document.getElementById("content").innerHTML=html;
 }
@@ -560,7 +719,8 @@ function render(){
     typeRowEl.style.display="none";
   }else{
     typeRowEl.style.display="flex";
-    const availTypes=d.food?TYPES:TYPES.filter(t=>t!=="Food");
+    const hasYoga=!!(d.days.Monday&&d.days.Monday.Yoga);
+  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga));
     let th="";
     ["All",...availTypes].forEach(t=>{
       const em=t==="All"?"\u{1f4cb}":typeEmoji[t];
@@ -586,7 +746,7 @@ function setState(key,val){state[key]=val;if(key==="name")state.type="All";rende
 // Register Service Worker
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js?v=11').catch(()=>{});
+    navigator.serviceWorker.register('sw.js?v=13').catch(()=>{});
   });
 }
 
