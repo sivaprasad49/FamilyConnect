@@ -1,4 +1,4 @@
-const CACHE_NAME = 'familyconnect-v13';
+const CACHE_NAME = 'familyconnect-v14';
 const ASSETS = [
   '/FamilyConnect/',
   '/FamilyConnect/index.html',
