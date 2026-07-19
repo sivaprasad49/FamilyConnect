@@ -139,6 +139,45 @@
     .header{padding-top:calc(24px + env(safe-area-inset-top))}
     .footer{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
   }
+
+  /* Food card */
+  .card.Food{background:#EFF8ED;border-color:#A8D9A0}
+  .card.Food .card-head{border-bottom:1px solid #C9E8C2}
+  .card.Food .card-type{color:#2F9E44}
+  .card.Food .card-note{background:rgba(47,158,68,0.06);border-bottom:1px solid #C9E8C2}
+  .card.Food .sec-head{color:#2F9E44}
+  .type-btn.active[data-t="Food"]{background:#2F9E44;color:#fff}
+
+  .meal-ref{padding:10px 12px;border-radius:12px;background:#fff;margin-bottom:8px;border:1.5px solid #DCEEDA}
+  .meal-ref:last-child{margin-bottom:0}
+  .meal-name{font-size:14px;font-weight:700;color:#2D2D2D}
+  .meal-macros{font-size:11px;color:#6B8A63;margin-top:2px}
+
+  .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .macro-pill{background:#fff;border:1px solid #DCEEDA;border-radius:12px;padding:10px 6px;text-align:center}
+  .macro-val{font-size:15px;font-weight:800;color:#2F9E44}
+  .macro-label{font-size:10px;color:#6B8A63;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+
+  /* Progress tab */
+  .day-btn.prog-tab{background:#DCF0EA;color:#1C8C74}
+  .day-btn.prog-tab.active{background:#1C8C74;color:#fff;box-shadow:0 2px 8px rgba(28,140,116,.3)}
+
+  .prog-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1.5px solid #F0E0D8}
+  .prog-title{font-size:13px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#8B7B72;margin-bottom:10px}
+  .prog-subtitle{font-size:12px;font-weight:600;color:#8B7B72;margin:10px 0 6px}
+  .prog-label{font-size:12px;font-weight:600;color:#8B7B72;display:block;margin-bottom:6px}
+  .prog-hint{font-size:11px;color:#B5A69E;margin-top:8px;font-style:italic}
+  .prog-input{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #F0E0D8;font-family:inherit;font-size:14px;background:#FFF8F5;resize:vertical}
+
+  .bmi-pill{display:inline-flex;align-items:baseline;gap:6px;background:#FDE8E4;border-radius:12px;padding:8px 14px;margin:10px 0 4px}
+  .bmi-val{font-size:20px;font-weight:800;color:#E8634A}
+  .bmi-label{font-size:11px;font-weight:700;color:#C4553E;text-transform:uppercase;letter-spacing:.3px}
+
+  .flag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .flag-chip{padding:8px 14px;border-radius:20px;background:#F5EDE8;color:#8B7B72;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent}
+  .flag-chip.active-green{background:#3D9970;color:#fff}
+  .flag-chip.active-yellow{background:#C4841D;color:#fff}
+  .flag-chip.active-red{background:#D9483A;color:#fff}
 </style>
 </head>
 <body>
@@ -160,20 +199,26 @@
 <div class="content" id="content"></div>
 
 <div class="footer">
-  <div class="pain">Pain 0-2: Go &bull; Pain 3-4: Modify &bull; Pain 5+: Stop</div>
+  <div class="pain">Green 0-2: Train &bull; Yellow 3-4: Modify &bull; Red 5+/swelling: Stop &amp; assess</div>
   <div class="brand">Built with love by <strong>4S Nexus</strong></div>
 </div>
 
 <script>
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const TYPES=["Yoga","Breathing","Exercise"];
+const TYPES=["Yoga","Breathing","Exercise","Food"];
 const NAMES=["Siva","Sutharia"];
 const dayShort={Monday:"Mon",Tuesday:"Tue",Wednesday:"Wed",Thursday:"Thu",Friday:"Fri",Saturday:"Sat",Sunday:"Sun"};
-const dayTag={Monday:"REST",Tuesday:"PUSH",Wednesday:"LOW+PULL",Thursday:"REST",Friday:"PULL",Saturday:"LOW+PUSH",Sunday:"ARMS"};
-const dayEmoji={Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E0}",Thursday:"\u{1F7E2}",Friday:"\u{1F535}",Saturday:"\u{1F7E0}",Sunday:"\u{1F535}"};
-const typeEmoji={Yoga:"\u{1F9D8}",Breathing:"\u{1F32C}\uFE0F",Exercise:"\u{1F4AA}"};
+const dayTag={
+  Siva:{Monday:"UPPER A",Tuesday:"LOWER A",Wednesday:"RECOVERY",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"V-TAPER"},
+  Sutharia:{Monday:"UPPER A",Tuesday:"LOWER A",Wednesday:"RECOVERY",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"FULL BODY"}
+};
+const dayEmoji={
+  Siva:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
+  Sutharia:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"}
+};
+const typeEmoji={Yoga:"\u{1F9D8}",Breathing:"\u{1F32C}\uFE0F",Exercise:"\u{1F4AA}",Food:"\u{1F34E}"};
 
-let state={name:"Siva",day:DAYS[((new Date().getDay()+6)%7)],type:"All"};
+let state={name:"Siva",day:DAYS[((new Date().getDay()+6)%7)],type:"All",view:"plan"};
 
 
 
@@ -181,142 +226,316 @@ const DATA={
 Siva:{
 days:{
 Monday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Restore + Active Recovery (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 the corset muscle that flattens stomach]","Surya Namaskar A modified \u2013 5 rounds","Vrikshasana (NO wall) \u2013 1 min/side","Setu Bandhasana (single-leg if able) \u2013 3\u00d720 sec","Supta Matsyendrasana \u2013 1.5 min/side","Viparita Karani \u2013 3 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Long Holds (morning only, 2 min) \u2013 Squeeze 8-10 sec, relax 5 sec \u00d710","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"Evening",title:"REST / Active Recovery",items:["Option A: 15-20 min easy bike + mobility","Option B: Gentle swim 10 min","Option C: Foam rolling 10 min","No strength loading. Full recovery.","If knee puffy: ice 15-20 min, elevate."]}
+Yoga:{time:"~5 min",title:"Warm-Up + Mobility \u2013 Upper Body A",items:["Tadasana with slow breathing \u2013 45 sec","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1-2 rounds","Light side-lying external rotation \u2013 1\u00d712/side [rotator cuff]","Wall Slide with Reach or Push-up Plus \u2013 1\u00d710-12 [serratus anterior]"]},
+Breathing:{time:"~2 min \u2013 before lifting",title:"Kegel: Long Holds",items:["Contract gently for 6-8 sec, then relax fully for at least 6-8 sec","Repeat 6-8 times while breathing normally","  \u21b3 Contraction-focused day \u2013 don't brace glutes/thighs/abs to fake it"]},
+Exercise:{time:"~43 min total",title:"Upper Body A + Core + Grip",sections:[
+{name:"STRENGTH (~33 min)",items:["Superset A \u2013 Chest + Back","A1: DB Bench Press, neutral or comfortable grip \u2013 3\u00d78-12","A2: One-Arm Bench-Supported DB Row \u2013 3\u00d78-12/side","Superset B \u2013 Shoulders + Lats","B1: Seated Neutral-Grip DB Shoulder Press \u2013 2\u00d78-12","B2: Lat Pulldown or Band-Assisted Pull-up \u2013 2\u00d78-12","Superset C \u2013 Side Delts + Triceps","C1: DB Lateral Raise \u2013 2\u00d712-15","C2: Cable Triceps Pushdown or DB Overhead Extension \u2013 2\u00d710-15","Superset D \u2013 Arms + Grip","D1: Incline DB Curl \u2013 2\u00d710-15","D2: Suitcase Carry \u2013 2\u00d730-40 sec/side [GRIP + FOREARMS + OBLIQUES]"]},
+{name:"CORE + KNEE FINISHER (~7 min)",items:["Dead Bug \u2013 2\u00d78/side [TVA + DEEP CORE]","Reverse Crunch or Controlled Curl-up \u2013 2\u00d710-15 [RECTUS ABDOMINIS]","Terminal Knee Extension or Short-Arc Quad Extension \u2013 1\u00d712-15/side [KNEE REHAB]","  \u21b3 Symptom-free only \u2013 skip if any pain, warmth or swelling"]},
+{name:"COOLDOWN (~3-5 min)",items:["Gentle chest, shoulder and lat stretches","Relaxed breathing"]}
+]}
 },
 Tuesday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Standing Strength + Balance (30 min)",items:["Tadasana + Stomach Vacuum (exhale, pull navel in, hold 10 sec \u00d73) \u2013 1.5 min [TVA]","Surya Namaskar A \u2013 6 rounds","Virabhadrasana I (60\u00b0) \u2013 45 sec/side \u00d7 2","Virabhadrasana II \u2013 45 sec/side \u00d7 2","Utthita Parsvakonasana \u2013 45 sec/side","Vrikshasana (NO wall) \u2013 1 min/side","Utkatasana (10-sec \u00d7 3)","Uttanasana \u2013 30 sec \u00d7 2","Shavasana \u2013 2 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Quick Flicks (morning only, 2 min) \u2013 1 sec squeeze, 1 sec release. 20 flicks \u00d73 sets","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"UPPER PUSH: Chest + Shoulders + Triceps + Core (20 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Band Pull-Aparts \u2013 15","Band Dislocates (shoulder mobility) \u2013 10","Arm circles forward+backward \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7-8 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7-8 / 30 sec flat) \u2192 1.5 min"]},
-{name:"UPPER PUSH: Chest + Shoulders + Triceps + Core (20 min)",items:["Superset A \u2013 Chest + Obliques","A1: DB Bench Press (flat, neutral grip) \u2013 3\u00d78-12, tempo 2-1-2, RPE 7-8 [CHEST + FRONT DELTS]","A2: Cable Woodchop high-to-low \u2013 3\u00d710/side [OBLIQUES \u2013 waist]","  \u21b3 FT Busy? DB Woodchop: 1 DB both hands","Superset B \u2013 Shoulders + Side Delts","B1: Seated DB Shoulder Press (neutral) \u2013 3\u00d78-10, RPE 7-8 [SHOULDERS]","B2: DB Lateral Raise \u2013 3\u00d712-15 [SIDE DELTS \u2013 shoulder width]","Superset C \u2013 Triceps + Lower Abs","C1: Cable Tricep Pushdown (rope) \u2013 3\u00d710-12, RPE 7-8 [TRICEPS]","  \u21b3 FT Busy? DB Overhead Tricep Ext \u2013 3\u00d710-12","C2: Hanging Knee Raise (pull-up bar) \u2013 3\u00d712-15 [LOWER ABS \u2013 flat stomach]"]},
-{name:"STRETCHES (3 min)",items:["Chest doorway stretch \u2013 30 sec","Shoulder stretch \u2013 30 sec/side","Tricep stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min)",items:["Swim: freestyle+backstroke 10-15 min RPE 3-4","No pool: 10 min easy bike + foam rolling"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Lower Body A",items:["Tadasana \u2013 30 sec","Glute Bridge \u2013 10 reps","Quad Set \u2013 10 contractions/side","Modified Surya Namaskar \u2013 1 controlled round"]},
+Breathing:{time:"~2 min",title:"Kegel: Quick Flicks",items:["1-second gentle contraction followed by 2 seconds of complete relaxation","10 repetitions, rest, then repeat once"]},
+Exercise:{time:"~50 min total",title:"Lower Body A: Posterior Chain + Quads + Knee Control",sections:[
+{name:"STRENGTH (~31 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Romanian Deadlift \u2013 3\u00d78-10","A2: DB Hip Thrust \u2013 3\u00d710-12","Superset B \u2013 Quads + Hamstrings","B1: High-Bench Sit-to-Stand, shallow pain-free range \u2013 2\u00d78-10 [QUADS]","  \u21b3 If pain, warmth, swelling or instability: replace with Quad Sets 3\u00d710 + Straight-Leg Raise 2\u00d710-12, pain-free only","B2: Slider Hamstring Curl or Hamstring Walkout \u2013 2\u00d76-10","Superset C \u2013 Calves + Tibialis","C1: Standing Calf Raise \u2013 2\u00d712-15","C2: Tibialis Wall Raise \u2013 2\u00d715-20"]},
+{name:"HIP/KNEE STABILITY + CORE (~10-12 min)",items:["Side-Lying Hip Abduction or Clamshell \u2013 2\u00d712-15/side [HIP ABDUCTORS]","Pillow/Ball Adductor Squeeze \u2013 2\u00d720-30 sec [ADDUCTORS]","Terminal Knee Extension \u2013 2\u00d712-15/side [KNEE REHAB]","Standing Band March, Cable March or Seated Knee Lift \u2013 2\u00d710-12/side [HIP FLEXORS]","Side Plank \u2013 2\u00d720-30 sec/side [OBLIQUES]"]},
+{name:"COOLDOWN (~3-5 min)",items:["Hamstring, hip flexor and calf stretch","Relaxed breathing"]}
 ]}
 },
 Wednesday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Posterior Chain + Backbend (30 min)",items:["Tadasana + Stomach Vacuum (exhale, pull navel in, hold 10 sec \u00d73) \u2013 1.5 min [TVA]","Surya Namaskar A \u2013 5 rounds","Salabhasana \u2013 3\u00d725 sec","Setu Bandhasana (march) \u2013 3\u00d725 sec","Bhujangasana \u2013 3\u00d715 sec","Dhanurasana (Bow) \u2013 3\u00d720 sec","  \u21b3 Skip if back pain >2/10","Supta Matsyendrasana \u2013 1.5 min/side","Vrikshasana \u2013 1 min/side","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Elevator (morning only, 2 min) \u2013 Tighten in 3 stages (light\u2192medium\u2192max), hold 5 sec, release in 3 stages \u00d78","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"LOWER + PULL: Quads + Hams + Glutes + Adductors + Lats + Calves + Lower Back + Core + Knee (25 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension (bodyweight) \u2013 12/leg [knee rehab]","Glute Bridge 2-sec hold \u2013 12 reps","Band Lateral Monster Walks \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7-8 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7-8 / 30 sec flat) \u2192 1.5 min"]},
-{name:"LOWER + PULL: Quads + Hams + Glutes + Adductors + Lats + Calves + Lower Back + Core + Knee (25 min)",items:["Superset A \u2013 Quads/Glutes/Adductors + Hamstrings","A1: DB Sumo Squat (wide stance, toes out) \u2013 3\u00d710-12, tempo 3-1-1, RPE 7-8 [QUADS + GLUTES + ADDUCTORS/INNER THIGH]","  \u21b3 If knee reacts: Sit-to-Stand 3\u00d712","A2: DB Romanian Deadlift \u2013 3\u00d78-10, tempo 3-1-1, RPE 7-8 [HAMSTRINGS + GLUTES]","Superset B \u2013 Lats/Biceps + Glutes","B1: Scap Pulls (5) + Band-Assisted PULL-UPS \u2013 3\u00d74-8, RPE 7-8 [LATS + BICEPS]","  \u21b3 Progress: reduce band; add 4-sec eccentric","B2: Hip Thrust on bench (DB on lap) \u2013 3\u00d712-15, RPE 7 [GLUTES]","Superset C \u2013 Lower Back + Calves + Knee","C1: Superman Hold (lie on stomach, lift arms+legs) \u2013 2\u00d715-20 sec [LOWER BACK / ERECTORS]","C2: Standing Calf Raise (DB, edge of step) \u2013 3\u00d715 [CALVES]","C3: Short-Arc Quad Extension (light DB) \u2013 2\u00d715/leg [KNEE REHAB]","Superset D \u2013 Obliques + Deep Core","D1: Bicycle Crunch \u2013 2\u00d715/side [OBLIQUES + RECTUS ABS \u2013 flat stomach]","D2: Dead Bug \u2013 2\u00d78/side [TVA + DEEP CORE]"]},
-{name:"STRETCHES (3 min)",items:["Hamstring stretch \u2013 30 sec/side","Hip flexor stretch \u2013 30 sec/side","Calf stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min)",items:["Swim: freestyle+backstroke 10-15 min RPE 3-4","No pool: 10 min easy bike + foam rolling"]}
+Yoga:{time:"~20-25 min",title:"Restorative Yoga + Mobility",items:["Tadasana breathing","Cat-Cow","Gentle modified Surya Namaskar","Bhujangasana","Setu Bandhasana","Supine hamstring stretch","Supta Matsyendrasana","Viparita Karani","Shavasana","  \u21b3 Avoid deep or painful knee flexion throughout"]},
+Breathing:{time:"~3 min",title:"Kegel: Reverse Kegels (Relaxation Day)",items:["Slow diaphragmatic breathing while consciously relaxing and lengthening the pelvic floor","  \u21b3 Relaxation-focused day \u2013 no contraction work today"]},
+Exercise:{time:"~30-40 min total",title:"Knee Rehab + Small-Muscle Block + Optional Conditioning",sections:[
+{name:"KNEE REHABILITATION (~8-10 min)",items:["Quad Set \u2013 2\u00d710 contractions/side, hold 5 sec","Short-Arc Quad Extension \u2013 2\u00d712-15/side","Supported Single-Leg Balance, eyes open \u2013 2\u00d720-30 sec/side","Side-Lying Leg Raise \u2013 1-2\u00d712-15/side","  \u21b3 Use fingertip support. Don't progress to eyes-closed balance while instability is present."]},
+{name:"SMALL-MUSCLE BLOCK (~8-10 min)",items:["Chin Tuck \u2013 1\u00d78, hold 3-5 sec [deep neck flexors]","Four-Way Neck Isometric \u2013 front, back, both sides, 1\u00d710 sec each [neck stabilizers]","Short-Foot Exercise \u2013 1\u00d78/side, hold 5 sec [intrinsic arch]","Toe Yoga \u2013 big toe up/others down, then reverse, 1\u00d78-10 each","Band or Cable Ankle Inversion and Eversion \u2013 1\u00d712-15 each direction/side [posterior tibialis + peroneals]","Wrist Flexion + Wrist Extension \u2013 1\u00d712-15 each","Finger Extension \u2013 1\u00d715-20 using a light elastic band or hair tie","  \u21b3 No band? Palm-down on a table, lift each finger separately 8-10 reps, then all four together 10-15 reps; or gently resist finger opening with the other hand 1\u00d712-15","Optional facial mobility (1-2 min): gentle smile-and-release, eyebrow raise-and-release, cheek puff, slow pain-free jaw opening, 5 reps each","  \u21b3 Don't clench hard or continue if there's jaw clicking or pain"]},
+{name:"OPTIONAL CONDITIONING (0-15 min, only if knee is at baseline)",items:["Flat treadmill or outdoor walking, easy-to-moderate pace; OR","Seated upper-body cable conditioning: alternate light rows and presses 30 sec each, 30 sec easy rest, 6-10 rounds"]}
 ]}
 },
 Thursday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Mobility + Deep Recovery (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 the corset muscle that flattens stomach]","Surya Namaskar gentle \u2013 4 rounds","Anjaneyasana \u2013 1 min/side","Parsvottanasana \u2013 1 min/side","Supta Padangusthasana \u2013 1.5 min/side","Garudasana arms \u2013 45 sec/side","Pigeon Pose prep \u2013 1 min/side","Balasana \u2013 1 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Reverse Kegels (morning only, 2 min) \u2013 RELAX and lengthen pelvic floor. Breathe into belly, hold relaxed 8 sec \u00d710","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"Evening",title:"REST / Active Recovery",items:["Option A: 15-20 min easy bike + mobility","Option B: Gentle swim 10 min","Option C: Foam rolling 10 min","No strength loading. Full recovery.","If knee puffy: ice 15-20 min, elevate."]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Upper Body B",items:["Tadasana breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1 round","Band Pull-Apart or light reverse fly \u2013 12 reps","Wall Slide with Lift-off or Incline Y-Raise \u2013 1\u00d710-12 [serratus + lower trapezius]"]},
+Breathing:{time:"~2 min",title:"Kegel: Elevator",items:["Gradually tighten light \u2192 medium \u2192 firm, hold briefly, then release gradually","Don't use maximal effort"]},
+Exercise:{time:"~43-44 min total",title:"Upper Body B + Core + Rotator Cuff",sections:[
+{name:"STRENGTH (~33 min)",items:["Superset A \u2013 Chest + Back","A1: Incline DB Press or Elevated Push-up \u2013 3\u00d78-12","A2: Chest-Supported DB Row \u2013 3\u00d78-12","Superset B \u2013 Chest + Lats","B1: Cable Fly or Flat Push-up \u2013 2\u00d710-15","B2: Straight-Arm Cable Pulldown or DB Pullover \u2013 2\u00d710-15","Superset C \u2013 Rear Delts + Side Delts","C1: Face Pull \u2013 2\u00d712-15","C2: DB Lateral Raise \u2013 2\u00d712-15","Superset D \u2013 Arms","D1: Hammer Curl \u2013 2\u00d710-15","D2: Overhead Triceps Extension \u2013 2\u00d710-15"]},
+{name:"CORE + CUFF + QUAD MICRO-DOSE (~9-10 min)",items:["Pallof Press \u2013 2\u00d710/side or 20-sec holds [DEEP CORE]","Side-Lying External Rotation \u2013 2\u00d712-15/side, light weight [ROTATOR CUFF]","Progressive Short-Arc Quad Extension or Terminal Knee Extension \u2013 2\u00d712-20/side, pain-free range, RPE 6-7 [KNEE \u2013 2nd weekly quad exposure]","  \u21b3 Use a light ankle weight or low cable with ankle cuff when available; otherwise slow 3-sec lowering + 3-sec squeeze at full comfortable extension","  \u21b3 Stop if warmth, swelling, pain above 2/10 or instability appears","  \u21b3 This is the planned 2nd weekly quad exposure \u2013 Saturday's Bulgarian split squat is a bonus 3rd, not the exercise the 2x/week claim depends on"]},
+{name:"COOLDOWN (~3-5 min)",items:["Chest, back and shoulder stretches","Relaxed breathing"]}
+]}
 },
 Friday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Balance Progression (30 min)",items:["Tadasana + Stomach Vacuum (10 sec \u00d73) then eyes closed 15 sec \u2013 1.5 min [TVA]","Virabhadrasana I \u2013 45 sec/side \u00d7 2","Virabhadrasana II \u2013 1 min/side","Virabhadrasana III prep \u2013 30 sec/side \u00d7 2","Vrikshasana (eyes closed if stable) \u2013 1 min/side","Garudasana \u2013 30 sec/side","Natarajasana prep \u2013 20 sec/side","Tadasana \u2013 30 sec","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Pulse Holds (morning only, 2 min) \u2013 50% squeeze \u2192 pulse 10\u00d7 \u2192 100% hold 5 sec \u2192 release \u00d76","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"UPPER PULL: Back + Biceps + Rear Delts + Traps + Rotator Cuff + Core (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Band Pull-Aparts \u2013 15","Band Dislocates (shoulder mobility) \u2013 10","Arm circles forward+backward \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7-8 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7-8 / 30 sec flat) \u2192 1.5 min"]},
-{name:"UPPER PULL: Back + Biceps + Rear Delts + Traps + Rotator Cuff + Core (22 min)",items:["Superset A \u2013 Lats + Upper Back","A1: Cable Lat Pulldown (functional trainer) \u2013 3\u00d78-12, RPE 7-8 [LATS]","  \u21b3 FT Busy? DB Pullover on bench \u2013 3\u00d710-12","A2: Single-Arm DB Row (bench-supported) \u2013 3\u00d710-12/side, RPE 7-8 [UPPER BACK + LATS + RHOMBOIDS]","Superset B \u2013 Biceps + Rear Delts/Posture","B1: Incline DB Curl (bench 45\u00b0) \u2013 3\u00d710-12, RPE 7-8 [BICEPS \u2013 long head stretch]","B2: Cable Face Pull (rope) \u2013 3\u00d712-15, RPE 7 [REAR DELTS + EXTERNAL ROTATION + POSTURE]","  \u21b3 FT Busy? DB Reverse Fly (incline bench) \u2013 3\u00d712-15","Superset C \u2013 Traps + Rotator Cuff + Obliques","C1: DB Shrugs (heavy) \u2013 3\u00d712-15, squeeze at top 2 sec [TRAPS \u2013 upper back thickness]","C2: DB External Rotation (lying on side, elbow at 90\u00b0) \u2013 2\u00d712-15/side, light weight [ROTATOR CUFF \u2013 shoulder injury prevention]","  \u21b3 CRITICAL: Use light weight (2-5 kg). This is rehab/prehab, not strength. Slow and controlled.","C3: Side Plank with hip dip \u2013 2\u00d710/side [OBLIQUES \u2013 waist]"]},
-{name:"STRETCHES (3 min)",items:["Lat stretch (pull-up bar hang) \u2013 30 sec/side","Cross-body shoulder stretch \u2013 30 sec/side","Neck rolls \u2013 20 sec each direction"]},
-{name:"POST-SESSION (10 min)",items:["Swim: freestyle+backstroke 10-15 min RPE 3-4","No pool: 10 min easy bike + foam rolling"]}
+Yoga:{time:"~20-25 min",title:"Mobility / Yoga",items:["Tadasana","Cat-Cow","Gentle Surya Namaskar","Downward Dog","Supine hamstring stretch","Chest opener","Lat stretch","Setu Bandhasana","Viparita Karani","Shavasana"]},
+Breathing:{time:"~3 min",title:"Kegel: Reverse Kegels (Relaxation Day)",items:["Reverse Kegels and relaxed diaphragmatic breathing only","  \u21b3 Relaxation-focused day"]},
+Exercise:{time:"~25-40 min total",title:"Conditioning + Lower-Leg Support + Small-Muscle Block",sections:[
+{name:"OPTIONAL CONDITIONING (10-15 min)",items:["Same symptom-free options as Wednesday","Avoid incline treadmill walking and cycling for now"]},
+{name:"JOINT + LOWER-LEG WORK (~5-8 min)",items:["Quad Set \u2013 2\u00d710/side","Supported balance, eyes open \u2013 2\u00d720-30 sec/side","Calf Raise \u2013 1-2\u00d715","Tibialis Raise \u2013 1-2\u00d715-20"]},
+{name:"SMALL-MUSCLE BLOCK (~8-10 min)",items:["Repeat Wednesday's neck / wrist+finger / ankle invertor-evertor / intrinsic-foot circuit \u2013 2nd weekly exposure","Optional facial mobility as on Wednesday"]}
 ]}
 },
 Saturday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Flow + Core (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 the corset muscle that flattens stomach]","Surya Namaskar A (low plank 5 sec) \u2013 6 rounds","Warrior I\u2192II\u2192Parsvakonasana \u2013 1 min each/side","Navasana (Boat) \u2013 3\u00d720 sec","Ardha Navasana \u2013 3\u00d710 sec","Ardha Matsyendrasana \u2013 1 min/side","Paschimottanasana \u2013 1.5 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Combo Flick+Hold (morning only, 2 min) \u2013 10 quick flicks then hold max 8 sec, relax 5 sec \u00d75 sets","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"LOWER + PUSH: Quads + Hams + Glutes + Chest + Calves + Lower Back + Carry (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension (bodyweight) \u2013 12/leg [knee rehab]","Glute Bridge 2-sec hold \u2013 12 reps","Band Lateral Monster Walks \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7-8 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7-8 / 30 sec flat) \u2192 1.5 min"]},
-{name:"LOWER + PUSH: Quads + Hams + Glutes + Chest + Calves + Lower Back + Carry (22 min)",items:["Superset A \u2013 Quads/Glutes + Hamstrings","A1: DB Bulgarian Split Squat \u2013 3\u00d78-10/side, tempo 3-1-1, RPE 7 [QUADS + GLUTES]","  \u21b3 If knee reacts: DB Step-ups 3\u00d78/side","A2: DB Stiff-Leg Deadlift \u2013 3\u00d710-12, RPE 7-8 [HAMSTRINGS]","Superset B \u2013 Chest/Triceps + Lower Back","B1: Push-up (flat or deficit on DBs) \u2013 3\u00d710-15, RPE 7-8 [CHEST + TRICEPS + SERRATUS]","  \u21b3 Progress: feet elevated when >15 reps","B2: Superman Hold \u2013 2\u00d715-20 sec [LOWER BACK / ERECTORS]","Superset C \u2013 Calves + Obliques/Grip + Hamstrings","C1: Standing Calf Raise (DB) \u2013 3\u00d715 [CALVES]","C2: DB Suitcase Carry (heavy, one hand) \u2013 2\u00d740 sec/side [OBLIQUES + GRIP + FOREARMS]","C3: Hamstring Walkout from Bridge \u2013 2\u00d78-10 [HAMSTRINGS + GLUTES]"]},
-{name:"STRETCHES (3 min)",items:["Quad stretch \u2013 30 sec/side","Hip flexor stretch \u2013 30 sec/side","Calf stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min)",items:["Swim: freestyle+backstroke 10-15 min RPE 3-4","No pool: 10 min easy bike + foam rolling"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Lower Body B",items:["Tadasana \u2013 30 sec","Glute Bridge \u2013 10 reps","Quad Set \u2013 10 contractions/side","Modified Surya Namaskar \u2013 1 controlled round"]},
+Breathing:{time:"~2 min",title:"Kegel: Combination",items:["5 quick contractions followed by one 5-second hold and a full 8-10-second relaxation","Repeat 3-4 times"]},
+Exercise:{time:"~45-48 min total",title:"Lower Body B: Stability + Conditional Bulgarian Split Squat",sections:[
+{name:"STRENGTH (~30-32 min)",items:["Superset A \u2013 Hamstrings + Glutes","A1: DB Deadlift from Raised Blocks \u2013 3\u00d78-10","A2: Glute Bridge or Hip Thrust \u2013 3\u00d710-15","Superset B \u2013 Quads (conditional) + Hamstrings","B1: Supported Bulgarian Split Squat \u2013 GREEN DAYS ONLY \u2013 2\u00d76-10/side","B2: Hamstring Walkout or Slider Curl \u2013 2\u00d76-10","Superset C \u2013 Calves + Tibialis","C1: Seated Calf Raise \u2013 2\u00d712-15","C2: Tibialis Wall Raise \u2013 2\u00d715-20"]},
+{name:"BULGARIAN SPLIT SQUAT RULES",items:["GREEN DAY \u2013 perform it: pain 0-2/10, no warmth/thickening/swelling, no instability. One-hand support, low rear-foot support, bodyweight or light DB, comfortable depth, lower under control ~3 sec, front knee tracking toward 2nd-3rd toe, stop with ~3 reps in reserve","YELLOW DAY \u2013 mild stiffness/tenderness/uncertainty: don't just repeat Tuesday's sit-to-stand. Try Supported Static Split Squat (rear foot on floor) 2\u00d76-8/side first, or Progressive Short-Arc/Terminal Knee Extension 2\u00d715-20/side. High-bench sit-to-stand only as last resort. Reduce depth/load 25-50%, don't progress that week.","\u26a0\ufe0f RED DAY \u2013 warmth, swelling, giving-way, limping, or pain \u22655/10: no loaded knee-bending exercise. Use Quad Set 2-3\u00d710, Straight-Leg Raise 2\u00d710-12 (if pain-free), Short-Arc Quad Extension 1-2\u00d712-15 (if pain-free).","  \u21b3 Don't combine Bulgarian split squats with step-ups, deep sumo squats and wall sits in the same workout","  \u21b3 Start once weekly. Consider a 2nd weekly exposure only after \u22654 consistently symptom-free weeks."]},
+{name:"HIP/KNEE STABILITY + CORE (~7-9 min)",items:["Side-Lying Leg Raise or Light Band Hip Abduction \u2013 2\u00d712-15/side [HIP ABDUCTORS]","Pillow/Ball Adductor Squeeze \u2013 2\u00d720-30 sec [ADDUCTORS]","Short-Arc Quad Extension \u2013 1-2\u00d712-15/side, only if needed and symptom-free","Standing Band March, Cable March or Seated Knee Lift \u2013 2\u00d710-12/side [HIP FLEXORS \u2013 2nd exposure]","Bird Dog \u2013 2\u00d78/side [LOWER BACK / ERECTORS]"]}
 ]}
 },
 Sunday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Inversion + Strength (35 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 the corset muscle that flattens stomach]","Down Dog \u2013 45 sec \u00d7 3","Dolphin Pose \u2013 3\u00d730 sec","Shirsasana \u2013 1-3 min","  \u21b3 Wall ok. Skip if neck/BP \u2192 Dolphin 45 sec \u00d7 3","Balasana \u2013 1 min","Halasana \u2013 1-2 min","  \u21b3 Skip if neck pain \u2192 Viparita Karani","Setu Bandhasana (single-leg) \u2013 3\u00d725 sec","Supta Baddha Konasana \u2013 2 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (gentle) \u2013 2 min","KEGEL: Breathing Sync (morning only, 2 min) \u2013 Exhale = squeeze+lift (4 sec), Inhale = relax+soften (4 sec) \u00d715 cycles","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"ARMS + WEAK POINTS: Biceps + Triceps + Forearms + Core + Calves + Knee (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension \u2013 12/leg","Band Pull-Aparts \u2013 15","Light DB curl + wrist circles \u2013 10 reps + 30 sec"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7-8 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7-8 / 30 sec flat) \u2192 1.5 min"]},
-{name:"ARMS + WEAK POINTS: Biceps + Triceps + Forearms + Core + Calves + Knee (22 min)",items:["Superset A \u2013 Biceps + Triceps","A1: DB Hammer Curl \u2013 3\u00d710-12, RPE 7-8 [BRACHIALIS + BICEPS \u2013 arm thickness]","A2: Cable Overhead Tricep Extension (rope) \u2013 3\u00d710-12, RPE 7-8 [TRICEPS \u2013 long head]","  \u21b3 FT Busy? DB Overhead Tricep Ext \u2013 3\u00d710-12","Superset B \u2013 Bicep Peak + Triceps","B1: DB Concentration Curl \u2013 3\u00d710-12/arm [BICEPS \u2013 peak]","B2: Close-Grip Push-up or Bench Dip \u2013 3\u00d78-12 [TRICEPS]","Superset C \u2013 Forearms","C1: DB Wrist Curl (seated, forearm on thigh, palm up) \u2013 2\u00d715 [FOREARMS \u2013 inner]","C2: DB Reverse Wrist Curl (palm down) \u2013 2\u00d715 [FOREARMS \u2013 outer + grip]","  \u21b3 Use light weight (3-5 kg). Forearms respond to high reps.","Superset D \u2013 Lower Abs + Deep Core + Calves + Knee","D1: Hanging Knee Raise \u2013 3\u00d712-15 [LOWER ABS]","D2: Pallof Press (cable) \u2013 2\u00d720 sec/side [DEEP CORE]","  \u21b3 FT Busy? DB Halo \u2013 2\u00d78 each direction","D3: Seated Calf Raise (DB on knees) \u2013 3\u00d715 [SOLEUS]","D4: Short-Arc Quad Extension \u2013 2\u00d715/leg [KNEE REHAB]"]},
-{name:"STRETCHES (3 min)",items:["Bicep/forearm stretch \u2013 20 sec/side","Tricep stretch \u2013 20 sec/side","Wrist flexor+extensor stretch \u2013 20 sec each"]},
-{name:"POST-SESSION (10 min)",items:["Swim: freestyle+backstroke 10-15 min RPE 3-4","No pool: 10 min easy bike + foam rolling"]}
+Yoga:{time:"~5 min",title:"Warm-Up \u2013 Athletic V-Taper",items:["Tadasana breathing","Cat-Cow","Modified Surya Namaskar \u2013 1-2 rounds","Shoulder circles and scapular retraction"]},
+Breathing:{time:"~2 min",title:"Kegel: Breathing Sync",items:["Gentle contraction on exhale, complete relaxation on inhale","Don't brace continuously"]},
+Exercise:{time:"~48 min total",title:"Athletic V-Taper + Carries + Core",sections:[
+{name:"STRENGTH (~34-36 min) \u2013 no direct arm isolation, already covered Mon/Thu",items:["Superset A \u2013 Chest/Push + Back/Pull","A1: Elevated Push-up or DB Floor Press \u2013 3\u00d78-15","A2: Lat Pulldown or Band-Assisted Pull-up \u2013 3\u00d78-12","Superset B \u2013 Shoulders + Back","B1: Seated DB Shoulder Press, light/moderate \u2013 2\u00d78-12","B2: Chest-Supported DB Row \u2013 2\u00d78-12","Superset C \u2013 Shoulder Width","C1: DB Lateral Raise \u2013 2\u00d712-15","C2: Rear-Delt Fly \u2013 2\u00d712-15","Superset D \u2013 Carries + Core","D1: Farmer Carry \u2013 2-3\u00d730-40 sec [GRIP + TRAPS + CORE]","D2: Cable Woodchop \u2013 2\u00d710/side [OBLIQUES]"]},
+{name:"FINISHER (~6-8 min)",items:["Reverse Crunch or Cable Crunch \u2013 2\u00d710-15 [RECTUS ABDOMINIS \u2013 2nd direct exposure]","Front Plank \u2013 2\u00d720-40 sec","Optional easy flat walking for the remaining time, only when the knee is calm"]}
 ]}
 }
+},
+food:{
+time:"Same every day \u2013 flexible meal count",
+title:"Daily Nutrition Targets (Lean Athletic)",
+note:"No fixed menu. Hit the daily totals \u2013 2 or 3 meals both work.",
+targets:[
+{label:"Calories",val:"~2,000\u20132,100 kcal"},
+{label:"Protein",val:"140 g"},
+{label:"Carbohydrate",val:"220 g"},
+{label:"Fat",val:"65 g"},
+{label:"Fibre",val:"32\u201335 g"},
+{label:"Water",val:"2.5\u20133.0 L"},
+{label:"Fruit",val:"2 servings"},
+{label:"Vegetables",val:"3+ cups"},
+{label:"Added sugar",val:"\u226425\u201330 g"}
+],
+meals:[
+{name:"Meal 1 \u2013 after morning workout",cals:"~620 kcal",protein:"45 g",carb:"70 g",fat:"18 g",fibre:"~10 g"},
+{name:"Meal 2",cals:"~720 kcal",protein:"50 g",carb:"80 g",fat:"22 g",fibre:"~12 g"},
+{name:"Meal 3",cals:"~685 kcal",protein:"45 g",carb:"70 g",fat:"25 g",fibre:"10\u201313 g"}
+],
+sections:[
+{name:"PER-MEAL QUALITY RULE",items:["Its complete protein target","A high-fibre carbohydrate source","Vegetables and/or fruit","A measured healthy-fat portion","Water rather than a sugary drink","  \u21b3 A protein shake can close a genuine gap but counts toward daily calories \u2013 a sugary milkshake is dessert, not a free recovery drink"]},
+{name:"FOOD SOURCES",items:["Protein: eggs, chicken, Greek yogurt, cottage cheese, paneer (controlled portions), tofu, soy, dal, beans, lean meat, whey","Carbs: rice, oats, potatoes, whole-grain bread/chapati, legumes, fruit \u2013 adjust portions, don't eliminate","Fat: nuts, seeds, olive oil, avocado, egg yolks \u2013 measured portions, these add up fast","Fibre: vegetables, legumes, fruit, whole grains, nuts/seeds + a daily calcium source"]},
+{name:"FLEXIBILITY",items:["Aim for 80-90% minimally processed food","Keep 10-20% flexible for planned treats","Plan fried food or dessert instead of grazing unpredictably","Avoid casually drinking calories","Don't start high-dose iron/zinc/biotin or hair supplements without a demonstrated need"]}
+]
 }
 },
 Sutharia:{
 days:{
 Monday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Restore + Active Recovery (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 corset muscle for flat stomach]","Surya Namaskar A modified \u2013 5 rounds","Vrikshasana (NO wall) \u2013 1 min/side","Setu Bandhasana (single-leg if able) \u2013 3\u00d720 sec","Supta Matsyendrasana \u2013 1.5 min/side","Viparita Karani \u2013 3 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Long Holds (morning only, 2 min) \u2013 Squeeze 8-10 sec, relax 5 sec \u00d710","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"Evening",title:"REST / Active Recovery",items:["Option A: 15-20 min easy bike + mobility","Option B: Gentle swim 10 min","Option C: Foam rolling 10 min","No strength loading. Full recovery.","If knee puffy: ice 15-20 min, elevate."]}
+Yoga:{time:"~6-8 min",title:"Warm-Up \u2013 Upper Body A",items:["Tadasana with slow breathing","Cat-Cow \u2013 8 reps","Modified Surya Namaskar \u2013 1-2 rounds","Scapular Wall Slide \u2013 10","Light side-lying external rotation \u2013 10/side [rotator cuff]"]},
+Breathing:{time:"~1-2 min",title:"Pelvic Floor: Endurance Holds",items:["Six gentle 5-second lifts with at least 5-6 seconds of complete relaxation","  \u21b3 Maintenance, not maximal squeezing"]},
+Exercise:{time:"~50-55 min total",title:"Upper Body A + Posture + Rectus Core + Grip",sections:[
+{name:"STRENGTH",items:["Superset A \u2013 Chest + Back","A1: DB Bench Press, neutral or comfortable grip \u2013 3\u00d78-12","A2: Neutral-Grip Lat Pulldown \u2013 3\u00d78-12","Superset B \u2013 Back + Side Delts","B1: Seated Cable Row \u2013 3\u00d710-12","B2: DB Lateral Raise \u2013 2\u00d712-15","Superset C \u2013 Triceps + Biceps","C1: Cable Triceps Pushdown \u2013 2\u00d710-15","C2: Hammer Curl \u2013 2\u00d710-15","Superset D \u2013 Chest/Core + Grip","D1: Incline Push-up Plus \u2013 2\u00d78-12","D2: Suitcase Carry \u2013 2\u00d730-40 sec/side [GRIP + FOREARMS]"]},
+{name:"FINISHER (~5-8 min)",items:["Modified Curl-Up or Bench-Supported Curl-Up \u2013 2\u00d710-15 [RECTUS ABDOMINIS]","Optional Front Plank \u2013 1-2\u00d720-40 sec"]},
+{name:"COOLDOWN (~4-5 min)",items:["Chest stretch","Bench-supported lat stretch","Slow nasal breathing"]}
+]}
 },
 Tuesday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Standing Strength + Balance (30 min)",items:["Tadasana + Stomach Vacuum (exhale, pull navel in, hold 10 sec \u00d73) \u2013 1.5 min [TVA]","Surya Namaskar A \u2013 6 rounds","Virabhadrasana I (60\u00b0) \u2013 45 sec/side \u00d7 2","Virabhadrasana II \u2013 45 sec/side \u00d7 2","Utthita Parsvakonasana \u2013 45 sec/side","Vrikshasana (NO wall) \u2013 1 min/side","Utkatasana (10-sec \u00d7 3)","Uttanasana \u2013 30 sec \u00d7 2","Shavasana \u2013 2 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Quick Flicks (morning only, 2 min) \u2013 1 sec squeeze, 1 sec release. 20 flicks \u00d73 sets","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"UPPER PUSH: Chest + Shoulders + Triceps + Core (20 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Band Pull-Aparts \u2013 15","Band Dislocates (shoulder mobility) \u2013 10","Arm circles forward+backward \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7 / 30 sec flat) \u2192 1.5 min"]},
-{name:"UPPER PUSH: Chest + Shoulders + Triceps + Core (20 min)",items:["Superset A \u2013 Chest + Obliques","A1: DB Bench Press (flat, neutral grip) \u2013 3\u00d78-12, tempo 2-1-2, RPE 7 [CHEST + FRONT DELTS]","A2: Cable Woodchop high-to-low \u2013 3\u00d710/side [OBLIQUES \u2013 waist]","  \u21b3 FT Busy? DB Woodchop: 1 DB both hands","Superset B \u2013 Shoulders + Side Delts","B1: Seated DB Shoulder Press (neutral) \u2013 3\u00d78-10, RPE 7 [SHOULDERS]","B2: DB Lateral Raise \u2013 3\u00d712-15 [SIDE DELTS \u2013 shoulder width]","Superset C \u2013 Triceps + Lower Abs","C1: Cable Tricep Pushdown (rope) \u2013 3\u00d710-12, RPE 7 [TRICEPS]","  \u21b3 FT Busy? DB Overhead Tricep Ext \u2013 3\u00d710-12","C2: Lying Leg Raise (pelvic floor engage on lift) \u2013 3\u00d712-15 [LOWER ABS \u2013 flat stomach]"]},
-{name:"STRETCHES (3 min)",items:["Chest doorway stretch \u2013 30 sec","Shoulder stretch \u2013 30 sec/side","Tricep stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min) \u2013 No Swimming",items:["No swimming: 10 min easy bike RPE 2-3 + 5 min foam rolling","  \u21b3 Flare days: add neck rolls + elbow stretch"]}
+Yoga:{time:"~6-8 min",title:"Warm-Up \u2013 Lower Body A",items:["Tadasana","Glute Bridge \u2013 10","Bodyweight Squat to Bench \u2013 8","Hip-hinge drill \u2013 8","Modified Surya Namaskar \u2013 1 round"]},
+Breathing:{time:"~1-2 min",title:"Pelvic Floor: Breathing With Effort",items:["Exhale during the effort portion of each lift","Don't hold the breath or continuously squeeze the pelvic floor"]},
+Exercise:{time:"~50-55 min total",title:"Lower Body A: Glute/Leg Foundation + Core",sections:[
+{name:"STRENGTH",items:["Superset A \u2013 Quads + Hamstrings","A1: DB Goblet Squat, comfortable depth \u2013 3\u00d78-12","A2: DB Romanian Deadlift \u2013 3\u00d78-12","Superset B \u2013 Glutes + Calves","B1: DB Hip Thrust \u2013 3\u00d710-15","B2: Standing Calf Raise \u2013 3\u00d712-15","Superset C \u2013 Hip Abductors + Adductors","C1: Standing Cable or Side-Lying Hip Abduction \u2013 2\u00d712-15/side","C2: Pillow/Ball Adductor Squeeze \u2013 2\u00d720-30 sec","Superset D \u2013 Tibialis + Hip Flexors","D1: Tibialis Wall Raise \u2013 2\u00d715-20","D2: Supported Seated March \u2013 2\u00d710-12/side [HIP FLEXORS]"]},
+{name:"FINISHER (~5-8 min)",items:["Dead Bug \u2013 2\u00d78/side","Side Plank from knees or elevated \u2013 2\u00d720-30 sec/side"]},
+{name:"COOLDOWN (~4-5 min)",items:["Hip-flexor stretch","Hamstring stretch","Calf stretch"]}
 ]}
 },
 Wednesday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Posterior Chain + Backbend (30 min)",items:["Tadasana + Stomach Vacuum (exhale, pull navel in, hold 10 sec \u00d73) \u2013 1.5 min [TVA]","Surya Namaskar A \u2013 5 rounds","Salabhasana \u2013 3\u00d725 sec","Setu Bandhasana (march) \u2013 3\u00d725 sec","Bhujangasana \u2013 3\u00d715 sec","Dhanurasana (Bow) \u2013 3\u00d720 sec","  \u21b3 Skip if back pain >2/10","Supta Matsyendrasana \u2013 1.5 min/side","Vrikshasana \u2013 1 min/side","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Elevator (morning only, 2 min) \u2013 Tighten in 3 stages (light\u2192medium\u2192max), hold 5 sec, release in 3 stages \u00d78","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"LOWER + PULL: Quads + Hams + Glutes + Lats + Calves + Lower Back + Knee (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension (bodyweight) \u2013 12/leg [knee rehab]","Glute Bridge 2-sec hold \u2013 12 reps","Band Lateral Monster Walks \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7 / 30 sec flat) \u2192 1.5 min"]},
-{name:"LOWER + PULL: Quads + Hams + Glutes + Lats + Calves + Lower Back + Knee (22 min)",items:["Superset A \u2013 Quads/Glutes + Hamstrings","A1: DB Goblet Squat \u2013 3\u00d710-12, tempo 3-1-1, RPE 7 [QUADS + GLUTES]","  \u21b3 If knee reacts: Sit-to-Stand 3\u00d712","A2: DB Romanian Deadlift \u2013 3\u00d78-10, tempo 3-1-1, RPE 7 [HAMSTRINGS + GLUTES]","Superset B \u2013 Lats/Biceps + Glutes","B1: Cable Lat Pulldown (functional trainer, neutral) \u2013 3\u00d710-12, RPE 7 [LATS + BICEPS]","  \u21b3 FT Busy? DB Pullover on bench \u2013 3\u00d710-12","B2: Hip Thrust on bench (DB on lap) \u2013 3\u00d712-15, RPE 7 [GLUTES]","Superset C \u2013 Lower Back + Calves + Knee","C1: Superman Hold (lie on stomach, lift arms+legs) \u2013 2\u00d715-20 sec [LOWER BACK / ERECTORS]","C2: Standing Calf Raise (DB, edge of step) \u2013 3\u00d715 [CALVES]","C3: Short-Arc Quad Extension (light DB) \u2013 2\u00d715/leg [KNEE REHAB]","Superset D \u2013 Obliques + Deep Core/Pelvic Floor","D1: Bicycle Crunch \u2013 2\u00d715/side [OBLIQUES + ABS \u2013 flat stomach]","D2: Dead Bug (exhale + engage pelvic floor) \u2013 2\u00d78/side [TVA + PELVIC FLOOR]"]},
-{name:"STRETCHES (3 min)",items:["Hamstring stretch \u2013 30 sec/side","Hip flexor stretch \u2013 30 sec/side","Calf stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min) \u2013 No Swimming",items:["No swimming: 10 min easy bike RPE 2-3 + 5 min foam rolling","  \u21b3 Flare days: add neck rolls + elbow stretch"]}
+Yoga:{time:"~20-25 min",title:"Restorative Yoga + Mobility",items:["Tadasana","Cat-Cow","Gentle Surya Namaskar","Anjaneyasana","Parsvottanasana","Supta Padangusthasana","Garudasana arms","Pigeon preparation","Balasana","Viparita Karani","Shavasana"]},
+Breathing:{time:"~3 min",title:"Pelvic Floor: Relaxation",items:["Diaphragmatic breathing with Reverse Kegels: inhale into the lower ribs and abdomen and allow the pelvic floor to soften","Don't push downward forcefully"]},
+Exercise:{time:"~30-35 min total",title:"Joint Care + Small-Muscle Circuit + Cardio",sections:[
+{name:"SMALL-MUSCLE + JOINT CIRCUIT (~8-10 min)",items:["Chin Tuck \u2013 2\u00d78-10","Four-Way Neck Isometric \u2013 1-2\u00d710-15 sec each direction","Wrist Flexion and Extension \u2013 1-2\u00d715 each","Finger Extension \u2013 1\u00d715-20 using a hair tie/light band","  \u21b3 No band? Tabletop finger lifts or manual resistance","Ankle Inversion and Eversion \u2013 1-2\u00d712/side","Short-Foot Exercise and Toe Yoga \u2013 2\u00d78-10"]},
+{name:"LOW-IMPACT CARDIO (~15-20 min)",items:["Choose one: flat-to-moderate treadmill walking, stationary cycling at comfortable resistance, elliptical if joints tolerate it, or low-impact dance","Conversational pace, approximately RPE 4-6"]}
 ]}
 },
 Thursday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Mobility + Deep Recovery (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 corset muscle for flat stomach]","Surya Namaskar gentle \u2013 4 rounds","Anjaneyasana \u2013 1 min/side","Parsvottanasana \u2013 1 min/side","Supta Padangusthasana \u2013 1.5 min/side","Garudasana arms \u2013 45 sec/side","Pigeon Pose prep \u2013 1 min/side","Balasana \u2013 1 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Reverse Kegels (morning only, 2 min) \u2013 RELAX and lengthen pelvic floor. Breathe into belly, hold relaxed 8 sec \u00d710","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"Evening",title:"REST / Active Recovery",items:["Option A: 15-20 min easy bike + mobility","Option B: Gentle swim 10 min","Option C: Foam rolling 10 min","No strength loading. Full recovery.","If knee puffy: ice 15-20 min, elevate."]}
+Yoga:{time:"~6-8 min",title:"Warm-Up \u2013 Upper Body B",items:["Tadasana breathing","Cat-Cow \u2013 8","Modified Surya Namaskar \u2013 1-2 rounds","Scapular Wall Slide \u2013 10","Shoulder circles \u2013 10 each direction"]},
+Breathing:{time:"~1-2 min",title:"Pelvic Floor: Maintenance",items:["Normal exhale during effort \u2013 no continuous squeezing","  \u21b3 Other strength days get brief maintenance only, not a dedicated block"]},
+Exercise:{time:"~50-55 min total",title:"Upper Body B: Back/Shoulder Shape + Core",sections:[
+{name:"STRENGTH",items:["Superset A \u2013 Chest + Back","A1: Incline DB Press \u2013 3\u00d78-12","A2: Chest-Supported DB Row \u2013 3\u00d78-12","Superset B \u2013 Lats + Rear Delts","B1: Straight-Arm Cable Pulldown or Lat Pulldown \u2013 2-3\u00d710-12","B2: Face Pull or Rear-Delt Fly \u2013 2-3\u00d712-15","Superset C \u2013 Shoulders","C1: Seated DB Shoulder Press, light/moderate \u2013 2\u00d78-12","C2: DB Lateral Raise \u2013 2\u00d712-15","Superset D \u2013 Arms","D1: Cable Overhead Triceps Extension \u2013 2\u00d710-15","D2: Incline DB Curl \u2013 2\u00d710-15"]},
+{name:"FINISHER (~5-8 min)",items:["Bird Dog \u2013 2\u00d78/side [LOWER BACK / CORE]","Pallof Press \u2013 2\u00d710/side [DEEP CORE]","Side-Lying External Rotation \u2013 1-2\u00d712-15/side [ROTATOR CUFF]"]},
+{name:"COOLDOWN (~4-5 min)",items:["Chest stretch","Cross-body shoulder stretch","Child's Pose or bench-supported lat stretch"]}
+]}
 },
 Friday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Balance Progression (30 min)",items:["Tadasana + Stomach Vacuum (10 sec \u00d73) then eyes closed 15 sec \u2013 1.5 min [TVA]","Virabhadrasana I \u2013 45 sec/side \u00d7 2","Virabhadrasana II \u2013 1 min/side","Virabhadrasana III prep \u2013 30 sec/side \u00d7 2","Vrikshasana (eyes closed if stable) \u2013 1 min/side","Garudasana \u2013 30 sec/side","Natarajasana prep \u2013 20 sec/side","Tadasana \u2013 30 sec","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Pulse Holds (morning only, 2 min) \u2013 50% squeeze \u2192 pulse 10\u00d7 \u2192 100% hold 5 sec \u2192 release \u00d76","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"UPPER PULL: Back + Biceps + Rear Delts + Traps + Rotator Cuff + Core (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Band Pull-Aparts \u2013 15","Band Dislocates (shoulder mobility) \u2013 10","Arm circles forward+backward \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7 / 30 sec flat) \u2192 1.5 min"]},
-{name:"UPPER PULL: Back + Biceps + Rear Delts + Traps + Rotator Cuff + Core (22 min)",items:["Superset A \u2013 Lats + Upper Back","A1: Cable Lat Pulldown (functional trainer) \u2013 3\u00d78-12, RPE 7 [LATS]","  \u21b3 FT Busy? DB Pullover on bench \u2013 3\u00d710-12","A2: Single-Arm DB Row (bench-supported) \u2013 3\u00d710-12/side, RPE 7 [UPPER BACK + LATS + RHOMBOIDS]","Superset B \u2013 Biceps + Rear Delts/Posture","B1: Incline DB Curl (bench 45\u00b0) \u2013 3\u00d710-12, RPE 7 [BICEPS \u2013 long head stretch]","B2: Cable Face Pull (rope) \u2013 3\u00d712-15, RPE 7 [REAR DELTS + EXTERNAL ROTATION + POSTURE]","  \u21b3 FT Busy? DB Reverse Fly (incline bench) \u2013 3\u00d712-15","Superset C \u2013 Traps + Rotator Cuff + Obliques","C1: DB Shrugs (heavy) \u2013 3\u00d712-15, squeeze at top 2 sec [TRAPS \u2013 upper back thickness]","C2: DB External Rotation (lying on side, elbow at 90\u00b0) \u2013 2\u00d712-15/side, light weight [ROTATOR CUFF \u2013 shoulder injury prevention]","  \u21b3 CRITICAL: Use light weight (2-5 kg). This is rehab/prehab, not strength. Slow and controlled.","C3: Side Plank with hip dip \u2013 2\u00d710/side [OBLIQUES \u2013 waist]"]},
-{name:"STRETCHES (3 min)",items:["Lat stretch (pull-up bar hang) \u2013 30 sec/side","Cross-body shoulder stretch \u2013 30 sec/side","Neck rolls \u2013 20 sec each direction"]},
-{name:"POST-SESSION (10 min) \u2013 No Swimming",items:["No swimming: 10 min easy bike RPE 2-3 + 5 min foam rolling","  \u21b3 Flare days: add neck rolls + elbow stretch"]}
+Yoga:{time:"~20-25 min",title:"Mobility / Yoga",items:["Tadasana","Cat-Cow","Gentle Surya Namaskar","Warrior I and II in comfortable ranges","Garudasana arms","Supported Tree Pose, eyes open","Pigeon preparation","Supta Baddha Konasana","Shavasana"]},
+Breathing:{time:"~3 min",title:"Breathing",items:["Relaxed diaphragmatic breathing or Reverse Kegels"]},
+Exercise:{time:"~35-40 min total",title:"Cardio + Small-Muscle Completion",sections:[
+{name:"LOW-IMPACT CARDIO (~15-20 min)",items:["Walking, bike, elliptical or low-impact dance at RPE 4-6"]},
+{name:"SMALL-MUSCLE CIRCUIT (~8-10 min)",items:["Incline-Bench Y-Raise or light Cable Y-Raise \u2013 2\u00d710-12 [LOWER TRAPS]","Farmer Carry \u2013 2\u00d730-40 sec [GRIP + POSTURE]","Finger Extension \u2013 1\u00d715-20","  \u21b3 No band? Tabletop finger lifts or opposite-hand resistance","Seated Calf Raise \u2013 2\u00d712-15","Tibialis Raise \u2013 2\u00d715-20","Supported Seated March \u2013 2\u00d710/side [HIP FLEXORS]","Short-Foot Exercise \u2013 2\u00d78-10"]}
 ]}
 },
 Saturday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Flow + Core (30 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 corset muscle for flat stomach]","Surya Namaskar A (low plank 5 sec) \u2013 6 rounds","Warrior I\u2192II\u2192Parsvakonasana \u2013 1 min each/side","Navasana (Boat) \u2013 3\u00d720 sec","Ardha Navasana \u2013 3\u00d710 sec","Ardha Matsyendrasana \u2013 1 min/side","Paschimottanasana \u2013 1.5 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Combo Flick+Hold (morning only, 2 min) \u2013 10 quick flicks then hold max 8 sec, relax 5 sec \u00d75 sets","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"LOWER + PUSH: Quads + Hams + Glutes + Chest + Calves + Lower Back + Carry (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension (bodyweight) \u2013 12/leg [knee rehab]","Glute Bridge 2-sec hold \u2013 12 reps","Band Lateral Monster Walks \u2013 10 each"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7 / 30 sec flat) \u2192 1.5 min"]},
-{name:"LOWER + PUSH: Quads + Hams + Glutes + Chest + Calves + Lower Back + Carry (22 min)",items:["Superset A \u2013 Quads/Glutes + Hamstrings","A1: DB Bulgarian Split Squat \u2013 3\u00d78-10/side, tempo 3-1-1, RPE 7 [QUADS + GLUTES]","  \u21b3 If knee reacts: DB Step-ups 3\u00d78/side","A2: DB Stiff-Leg Deadlift \u2013 3\u00d710-12, RPE 7 [HAMSTRINGS]","Superset B \u2013 Chest/Triceps + Lower Back","B1: Incline Push-up (fists/parallettes, wrist-safe) \u2013 3\u00d710-15, RPE 7 [CHEST + TRICEPS + SERRATUS]","  \u21b3 Progress: reduce incline as strength builds","B2: Superman Hold \u2013 2\u00d715-20 sec [LOWER BACK / ERECTORS]","Superset C \u2013 Calves + Obliques/Grip + Hamstrings","C1: Standing Calf Raise (DB) \u2013 3\u00d715 [CALVES]","C2: DB Suitcase Carry (heavy, one hand) \u2013 2\u00d740 sec/side [OBLIQUES + GRIP + FOREARMS]","C3: Hamstring Walkout from Bridge \u2013 2\u00d78-10 [HAMSTRINGS + GLUTES]"]},
-{name:"STRETCHES (3 min)",items:["Quad stretch \u2013 30 sec/side","Hip flexor stretch \u2013 30 sec/side","Calf stretch \u2013 30 sec/side"]},
-{name:"POST-SESSION (10 min) \u2013 No Swimming",items:["No swimming: 10 min easy bike RPE 2-3 + 5 min foam rolling","  \u21b3 Flare days: add neck rolls + elbow stretch"]}
+Yoga:{time:"~6-8 min",title:"Warm-Up \u2013 Lower Body B",items:["Tadasana","Cat-Cow","Glute Bridge \u2013 10","Supported bodyweight split squat \u2013 5/side","Modified Surya Namaskar \u2013 1 round"]},
+Breathing:{time:"~1-2 min",title:"Pelvic Floor: Maintenance",items:["Normal exhale during effort \u2013 no continuous squeezing required"]},
+Exercise:{time:"~50-55 min total",title:"Lower Body B: Glute Shape + Complete Legs + Rectus Core",sections:[
+{name:"STRENGTH",items:["Superset A \u2013 Glutes + Quads","A1: DB Hip Thrust \u2013 3\u00d78-12","A2: Supported Bulgarian Split Squat \u2013 3\u00d78-10/side","  \u21b3 Low rear-foot support, hold a stable post if needed, front heel down, comfortable depth \u2013 shape-and-strength, not a balance contest","Superset B \u2013 Quads + Hamstrings","B1: DB Sumo Squat, comfortable depth \u2013 2\u00d710-12","B2: Hamstring Walkout or Slider Curl \u2013 2\u00d78-12","Superset C \u2013 Glutes","C1: Cable Glute Kickback \u2013 2\u00d712-15/side","C2: Standing Cable or Side-Lying Hip Abduction \u2013 2\u00d712-15/side","Superset D \u2013 Calves + Tibialis","D1: Seated Calf Raise \u2013 2\u00d712-15","D2: Tibialis Raise \u2013 2\u00d715-20"]},
+{name:"FINISHER (~5-8 min)",items:["Reverse Crunch \u2013 2\u00d710-15 [RECTUS ABDOMINIS]","Optional Cable Crunch \u2013 1-2\u00d710-15 when technique is comfortable"]},
+{name:"COOLDOWN (~4-5 min)",items:["Glute stretch","Hip-flexor stretch","Hamstring stretch"]}
 ]}
 },
 Sunday:{
-Yoga:{time:"6:30 \u2013 7:00 AM",title:"Inversion + Strength (35 min)",items:["Tadasana + Stomach Vacuum (exhale fully, pull navel to spine, hold 10 sec \u00d73) \u2013 1.5 min [TVA \u2013 corset muscle for flat stomach]","Down Dog \u2013 45 sec \u00d7 3","Dolphin Pose \u2013 3\u00d730 sec","Viparita Karani \u2013 3 min (NO Shirsasana)","  \u21b3 She does not do headstand. Viparita Karani instead.","Balasana \u2013 1 min","Ardha Halasana (legs 90\u00b0, toes UP) \u2013 1-2 min","  \u21b3 Skip if neck pain \u2192 extra Viparita Karani 3 min","Setu Bandhasana (single-leg) \u2013 3\u00d725 sec","Supta Baddha Konasana \u2013 2 min","Shavasana \u2013 3 min"]},
-Breathing:{time:"7:00 \u2013 7:12 AM & Before Sleep",title:"Morning Breathing + Kegels (12 min) & Night (10 min)",items:["Ujjayi Pranayama \u2013 2 min","Nadi Shodhana \u2013 2 min","Sheetali \u2013 2 min","Simhasana \u2013 2 min","Kapalabhati (skip heavy menstrual days) \u2013 2 min","KEGEL: Breathing Sync (morning only, 2 min) \u2013 Exhale = squeeze+lift (4 sec), Inhale = relax+soften (4 sec) \u00d715 cycles","  \u21b3 Night: Repeat breathing exercises only (10 min, no kegels)"]},
-Exercise:{time:"6:30 \u2013 7:20 PM",title:"ARMS + WEAK POINTS: Biceps + Triceps + Forearms + Core + Calves + Knee (22 min)",sections:[
-{name:"WARM-UP (5 min)",items:["Surya Namaskar A \u2013 2 rounds","Short-Arc Quad Extension \u2013 12/leg","Band Pull-Aparts \u2013 15","Light DB curl + wrist circles \u2013 10 reps + 30 sec"]},
-{name:"CONDITIONING (10 min)",items:["Bike: 2 min warm \u2192 5\u00d7(1 min RPE 7 / 30 sec easy) \u2192 1.5 min cool","OR Treadmill: 2 min flat \u2192 5\u00d7(1 min 12% incline RPE 7 / 30 sec flat) \u2192 1.5 min"]},
-{name:"ARMS + WEAK POINTS: Biceps + Triceps + Forearms + Core + Calves + Knee (22 min)",items:["Superset A \u2013 Biceps + Triceps","A1: DB Hammer Curl \u2013 3\u00d710-12, RPE 7 [BRACHIALIS + BICEPS \u2013 arm thickness]","A2: Cable Overhead Tricep Extension (rope) \u2013 3\u00d710-12, RPE 7 [TRICEPS \u2013 long head]","  \u21b3 FT Busy? DB Overhead Tricep Ext \u2013 3\u00d710-12","Superset B \u2013 Bicep Peak + Triceps","B1: DB Concentration Curl \u2013 3\u00d710-12/arm [BICEPS \u2013 peak]","B2: Bench Dip (feet flat) or Cable Pushdown (if wrist flares) \u2013 3\u00d78-12 [TRICEPS]","Superset C \u2013 Forearms","C1: DB Wrist Curl (seated, forearm on thigh, palm up) \u2013 2\u00d715 [FOREARMS \u2013 inner]","C2: DB Reverse Wrist Curl (palm down) \u2013 2\u00d715 [FOREARMS \u2013 outer + grip]","  \u21b3 Use light weight (3-5 kg). Forearms respond to high reps.","Superset D \u2013 Lower Abs + Deep Core + Calves + Knee","D1: Hanging Knee Raise \u2013 3\u00d712-15 [LOWER ABS]","D2: Pallof Press (cable) \u2013 2\u00d720 sec/side [DEEP CORE]","  \u21b3 FT Busy? DB Halo \u2013 2\u00d78 each direction","D3: Seated Calf Raise (DB on knees) \u2013 3\u00d715 [SOLEUS]","D4: Short-Arc Quad Extension \u2013 2\u00d715/leg [KNEE REHAB]"]},
-{name:"STRETCHES (3 min)",items:["Bicep/forearm stretch \u2013 20 sec/side","Tricep stretch \u2013 20 sec/side","Wrist flexor+extensor stretch \u2013 20 sec each"]},
-{name:"POST-SESSION (10 min) \u2013 No Swimming",items:["No swimming: 10 min easy bike RPE 2-3 + 5 min foam rolling","  \u21b3 Flare days: add neck rolls + elbow stretch"]}
+Yoga:{time:"~6-8 min",title:"Warm-Up \u2013 Full Body",items:["Tadasana breathing","Cat-Cow","Modified Surya Namaskar \u2013 1-2 rounds","Wall Slide \u2013 10"]},
+Breathing:{time:"~1-2 min",title:"Pelvic Floor: Breathing Sync",items:["Gentle lift on the exhale, complete relaxation on the inhale, 8-10 cycles"]},
+Exercise:{time:"~45-50 min total",title:"Lean-Curvy Athletic Full Body + Carries + Conditioning",sections:[
+{name:"STRENGTH/ATHLETIC CIRCUIT",items:["Superset A \u2013 Chest/Push + Back/Pull","A1: Incline Push-up or DB Floor Press \u2013 2-3\u00d78-15","A2: Lat Pulldown \u2013 3\u00d78-12","Superset B \u2013 Back + Shoulders","B1: Single-Arm Cable or DB Row \u2013 2\u00d710-12/side","B2: DB Lateral Raise or Rear-Delt Fly \u2013 2\u00d712-15","Superset C \u2013 Glutes + Legs","C1: Glute Bridge \u2013 2\u00d712-15","C2: Low Step-Up or Bench Sit-to-Stand, moderate \u2013 2\u00d710/side or 12 total","Superset D \u2013 Carries + Core","D1: Farmer Carry \u2013 3\u00d730-40 sec [GRIP + POSTURE]","D2: Cable Woodchop \u2013 2\u00d710/side [OBLIQUES]"]},
+{name:"FINISHER (~5-8 min)",items:["Optional Front Plank \u2013 2\u00d720-40 sec","Easy walking or bike \u2013 5-10 min when time and joints allow","  \u21b3 No pull-up, hanging knee raise or bar hang required at any stage \u2013 pulldowns and rows cover the back training for this goal"]},
+{name:"COOLDOWN (~4-5 min)",items:["Lat and chest stretches","Hip stretch","Slow breathing"]}
 ]}
 }
+},
+food:{
+time:"Same every day \u2013 flexible meal count",
+title:"Daily Nutrition Targets (Lean-Curvy Athletic)",
+note:"No fixed menu. Hit the daily totals \u2013 2 or 3 meals both work.",
+targets:[
+{label:"Calories",val:"~1,700\u20131,800 kcal"},
+{label:"Protein",val:"115 g"},
+{label:"Carbohydrate",val:"185 g"},
+{label:"Fat",val:"60 g"},
+{label:"Fibre",val:"28\u201332 g"},
+{label:"Water",val:"2.3\u20132.8 L"},
+{label:"Fruit",val:"2 servings"},
+{label:"Vegetables",val:"3+ cups"},
+{label:"Added sugar",val:"\u226425 g"}
+],
+meals:[
+{name:"Meal 1",cals:"~495 kcal",protein:"35 g",carb:"55 g",fat:"15 g",fibre:"8\u201310 g"},
+{name:"Meal 2",cals:"~620 kcal",protein:"40 g",carb:"70 g",fat:"20 g",fibre:"10\u201311 g"},
+{name:"Meal 3",cals:"~625 kcal",protein:"40 g",carb:"60 g",fat:"25 g",fibre:"10\u201311 g"}
+],
+sections:[
+{name:"PER-MEAL QUALITY RULE",items:["Meet the meal's protein target","Include a high-fibre carbohydrate source","Include vegetables and/or fruit","Use a measured healthy-fat portion","Drink water rather than a sugary drink","  \u21b3 A protein shake counts as food, not a free extra"]},
+{name:"FOOD SOURCES",items:["Protein: eggs, dairy/Greek yogurt, chicken, tofu, paneer, soy, dals, beans, whey when needed","Carbs: rice, chapati, oats, potatoes, fruit, whole grains \u2013 measured portions","Fibre/micronutrients: vegetables, legumes, nuts/seeds, calcium-rich foods regularly"]},
+{name:"FLEXIBILITY",items:["80/20 approach: mostly minimally processed food with planned flexibility","Plan sweets and fried snacks instead of grazing unpredictably","Don't start high-dose iron/zinc/biotin or vitamin supplements without a demonstrated need"]}
+]
 }
 }
 };
+
+// ---------- Weekly check-in (localStorage, one persistent record per person) ----------
+const HEIGHT_M={Siva:1.64,Sutharia:1.50};
+function todayKey(){return new Date().toLocaleDateString('en-CA')}
+function blankCheckin(){return{weight:"",waist:"",hip:"",water:"",food:"",notes:"",updatedAt:""}}
+function getCheckin(name){
+  try{const all=JSON.parse(localStorage.getItem('fc_checkin_v1')||'{}');return Object.assign(blankCheckin(),all[name]||{})}
+  catch(e){return blankCheckin()}
+}
+function saveCheckinField(name,patch){
+  try{
+    const all=JSON.parse(localStorage.getItem('fc_checkin_v1')||'{}');
+    all[name]=Object.assign(getCheckin(name),patch,{updatedAt:todayKey()});
+    localStorage.setItem('fc_checkin_v1',JSON.stringify(all));
+  }catch(e){}
+}
+function onCheckinInput(field,val){saveCheckinField(state.name,{[field]:val});render()}
+function setWater(level){const c=getCheckin(state.name);saveCheckinField(state.name,{water:c.water===level?"":level});render()}
+function setFood(level){const c=getCheckin(state.name);saveCheckinField(state.name,{food:c.food===level?"":level});render()}
+
+// ---------- Rendering ----------
+function renderSections(sec,cardCls){
+  let html="";
+  if(sec.items){
+    let num=0;
+    sec.items.forEach(item=>{
+      const isSub=item.startsWith("  \u21b3");
+      const isWarn=item.startsWith("\u26a0\ufe0f");
+      const cls=isSub?"item sub":isWarn?"item warn":"item";
+      if(!isSub&&!isWarn) num++;
+      const prefix=(!isSub&&!isWarn)?`<span class="num">${num}.</span>`:"";
+      html+=`<div class="${cls}">${prefix}${item}</div>`;
+    });
+  }
+  if(sec.sections){
+    sec.sections.forEach(s=>{
+      html+=`<div class="sec-block"><div class="sec-head">${s.name}</div>`;
+      s.items.forEach(item=>{
+        const isSub=item.startsWith("  \u21b3");
+        const isWarn=item.startsWith("\u26a0\ufe0f");
+        const isGroup=item.startsWith("Superset ")||item.startsWith("Finisher ");
+        const cls=isSub?"sec-item sub":isWarn?"sec-item warn":isGroup?"sec-item group":"sec-item";
+        html+=`<div class="${cls}">${item}</div>`;
+      });
+      html+=`</div>`;
+    });
+  }
+  return html;
+}
+
+function renderFoodCard(food){
+  if(!food) return "";
+  let html=`<div class="card Food"><div class="card-head"><div><div class="card-type">${typeEmoji.Food} FOOD</div><div class="card-title">${food.title}</div></div><div class="card-time">${food.time}</div></div>`;
+  if(food.note) html+=`<div class="card-note">${food.note}</div>`;
+  html+=`<div class="card-body">`;
+  html+=`<div class="sec-block"><div class="sec-head">DAILY TARGETS</div><div class="macro-grid">`;
+  food.targets.forEach(tg=>{html+=`<div class="macro-pill"><div class="macro-val">${tg.val}</div><div class="macro-label">${tg.label}</div></div>`});
+  html+=`</div></div>`;
+  html+=`<div class="sec-block"><div class="sec-head">PER-MEAL BREAKDOWN</div>`;
+  food.meals.forEach(m=>{
+    html+=`<div class="meal-ref"><div class="meal-name">${m.name}</div><div class="meal-macros">${m.cals} \u00b7 ${m.protein} protein \u00b7 ${m.carb} carb \u00b7 ${m.fat} fat \u00b7 ${m.fibre} fibre</div></div>`;
+  });
+  html+=`</div>`;
+  html+=renderSections({sections:food.sections});
+  html+=`</div></div>`;
+  return html;
+}
+
+function renderDay(d){
+  const dayData=d.days[state.day];
+  const availTypes=d.food?TYPES:TYPES.filter(t=>t!=="Food");
+  const types=state.type==="All"?availTypes:(availTypes.includes(state.type)?[state.type]:availTypes);
+  let html=`<div class="day-header"><span class="emoji">${dayEmoji[state.name][state.day]}</span><div><h2>${state.day}</h2></div><span class="tag">${dayTag[state.name][state.day]}</span></div>`;
+
+  types.forEach(t=>{
+    if(t==="Food"){html+=renderFoodCard(d.food);return}
+    const sec=dayData[t];
+    if(!sec)return;
+    html+=`<div class="card ${t}"><div class="card-head"><div><div class="card-type">${typeEmoji[t]} ${t.toUpperCase()}</div><div class="card-title">${sec.title}</div></div><div class="card-time">${sec.time}</div></div>`;
+    if(sec.note) html+=`<div class="card-note">${sec.note}</div>`;
+    html+=`<div class="card-body">${renderSections(sec)}</div></div>`;
+  });
+
+  document.getElementById("content").innerHTML=html;
+}
+
+function renderProgress(){
+  const name=state.name;
+  const c=getCheckin(name);
+  const h=HEIGHT_M[name];
+  const bmi=(c.weight&&h)?(parseFloat(c.weight)/(h*h)).toFixed(1):null;
+
+  let html=`<div class="day-header"><span class="emoji">\u{1F4CA}</span><div><h2>Progress</h2></div><span class="tag">${name.toUpperCase()}</span></div>`;
+
+  html+=`<div class="prog-card">
+    <div class="prog-title">Weekly Check-In</div>
+    ${c.updatedAt?`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Last updated ${c.updatedAt}</div>`:`<div class="prog-hint" style="margin-top:-6px;margin-bottom:12px">Not logged yet</div>`}
+
+    <label class="prog-label">Weight (kg)</label>
+    <input class="prog-input" type="number" step="0.1" placeholder="kg" value="${c.weight}" onchange="onCheckinInput('weight',this.value)"/>
+    ${bmi?`<div class="bmi-pill"><span class="bmi-val">${bmi}</span><span class="bmi-label">BMI</span></div>`:""}
+
+    <label class="prog-label" style="margin-top:12px">Waist (cm)</label>
+    <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.waist}" onchange="onCheckinInput('waist',this.value)"/>
+
+    <label class="prog-label" style="margin-top:12px">Hip (cm)</label>
+    <input class="prog-input" type="number" step="0.1" placeholder="cm" value="${c.hip}" onchange="onCheckinInput('hip',this.value)"/>
+
+    <div class="prog-subtitle">Water intake</div>
+    <div class="flag-row">
+      <div class="flag-chip ${c.water==="Low"?"active-red":""}" onclick="setWater('Low')">Low</div>
+      <div class="flag-chip ${c.water==="OK"?"active-yellow":""}" onclick="setWater('OK')">OK</div>
+      <div class="flag-chip ${c.water==="Good"?"active-green":""}" onclick="setWater('Good')">Good</div>
+    </div>
+
+    <div class="prog-subtitle">Food / macro adherence</div>
+    <div class="flag-row">
+      <div class="flag-chip ${c.food==="Poor"?"active-red":""}" onclick="setFood('Poor')">Poor</div>
+      <div class="flag-chip ${c.food==="OK"?"active-yellow":""}" onclick="setFood('OK')">OK</div>
+      <div class="flag-chip ${c.food==="Good"?"active-green":""}" onclick="setFood('Good')">Good</div>
+    </div>
+
+    <label class="prog-label" style="margin-top:12px">Notes</label>
+    <textarea class="prog-input" rows="2" placeholder="Anything worth remembering..." onchange="onCheckinInput('notes',this.value)">${c.notes}</textarea>
+    <div class="prog-hint">Update whenever you actually measure \u2013 weekly is plenty. Nothing here expires or resets.</div>
+  </div>`;
+
+  document.getElementById("content").innerHTML=html;
+}
 
 function render(){
   const d=DATA[state.name];
@@ -326,75 +545,48 @@ function render(){
   NAMES.forEach(n=>{nh+=`<button class="btn name-btn ${state.name===n?"active":""}" onclick="setState('name','${n}')">${n}</button>`});
   document.getElementById("nameRow").innerHTML=nh;
 
-  // Day buttons
+  // Day buttons + Progress tab
   let dh="";
-  DAYS.forEach(dy=>{dh+=`<button class="btn day-btn ${state.day===dy?"active":""}" onclick="setState('day','${dy}')"><div>${dayShort[dy]}</div><div class="label">${dayTag[dy]}</div></button>`});
+  DAYS.forEach(dy=>{
+    const active=state.view==="plan"&&state.day===dy;
+    dh+=`<button class="btn day-btn ${active?"active":""}" onclick="selectDay('${dy}')"><div>${dayShort[dy]}</div><div class="label">${dayTag[state.name][dy]}</div></button>`;
+  });
+  dh+=`<button class="btn day-btn prog-tab ${state.view==="checklist"?"active":""}" onclick="setView('checklist')"><div>\u{1F4CA}</div><div class="label">PROGRESS</div></button>`;
   document.getElementById("dayRow").innerHTML=dh;
 
-  // Type buttons
-  let th="";
-  ["All",...TYPES].forEach(t=>{
-    const em=t==="All"?"\u{1f4cb}":typeEmoji[t];
-    th+=`<button class="btn type-btn ${state.type===t?"active":""}" data-t="${t}" onclick="setState('type','${t}')">${em} ${t}</button>`;
-  });
-  document.getElementById("typeRow").innerHTML=th;
+  // Type buttons (hidden in progress view)
+  const typeRowEl=document.getElementById("typeRow");
+  if(state.view==="checklist"){
+    typeRowEl.style.display="none";
+  }else{
+    typeRowEl.style.display="flex";
+    const availTypes=d.food?TYPES:TYPES.filter(t=>t!=="Food");
+    let th="";
+    ["All",...availTypes].forEach(t=>{
+      const em=t==="All"?"\u{1f4cb}":typeEmoji[t];
+      th+=`<button class="btn type-btn ${state.type===t?"active":""}" data-t="${t}" onclick="setState('type','${t}')">${em} ${t}</button>`;
+    });
+    typeRowEl.innerHTML=th;
+  }
 
-  // Content
-  const dayData=d.days[state.day];
-  const types=state.type==="All"?TYPES:[state.type];
-  let html=`<div class="day-header"><span class="emoji">${dayEmoji[state.day]}</span><div><h2>${state.day}</h2></div><span class="tag">${dayTag[state.day]}</span></div>`;
+  if(state.view==="checklist"){renderProgress()}
+  else{renderDay(d)}
 
-  types.forEach(t=>{
-    const sec=dayData[t];
-    if(!sec)return;
-    html+=`<div class="card ${t}"><div class="card-head"><div><div class="card-type">${typeEmoji[t]} ${t.toUpperCase()}</div><div class="card-title">${sec.title}</div></div><div class="card-time">${sec.time}</div></div>`;
-    if(sec.note) html+=`<div class="card-note">${sec.note}</div>`;
-    html+=`<div class="card-body">`;
-
-    if(sec.items){
-      let num=0;
-      sec.items.forEach((item,i)=>{
-        const isSub=item.startsWith("  \u21b3");
-        const isWarn=item.startsWith("\u26a0\ufe0f");
-        const cls=isSub?"item sub":isWarn?"item warn":"item";
-        if(!isSub&&!isWarn) num++;
-        const prefix=(!isSub&&!isWarn)?`<span class="num">${num}.</span>`:"";
-        html+=`<div class="${cls}">${prefix}${item}</div>`;
-      });
-    }
-
-    if(sec.sections){
-      sec.sections.forEach(s=>{
-        html+=`<div class="sec-block"><div class="sec-head">${s.name}</div>`;
-        s.items.forEach((item,i)=>{
-          const isSub=item.startsWith("  \u21b3");
-          const isWarn=item.startsWith("\u26a0\ufe0f");
-          const isGroup=item.startsWith("Superset ")||item.startsWith("Finisher ");
-          const cls=isSub?"sec-item sub":isWarn?"sec-item warn":isGroup?"sec-item group":"sec-item";
-          html+=`<div class="${cls}">${item}</div>`;
-        });
-        html+=`</div>`;
-      });
-    }
-
-    html+=`</div></div>`;
-  });
-
-  document.getElementById("content").innerHTML=html;
-
-  // Scroll active day button into view
+  // Scroll active tab into view
   setTimeout(()=>{
     const activeDay=document.querySelector(".day-btn.active");
     if(activeDay) activeDay.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
   },50);
 }
 
-function setState(key,val){state[key]=val;render()}
+function selectDay(dy){state.day=dy;state.view="plan";render()}
+function setView(v){state.view=v;render()}
+function setState(key,val){state[key]=val;if(key==="name")state.type="All";render()}
 
 // Register Service Worker
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js?v=7').catch(()=>{});
+    navigator.serviceWorker.register('sw.js?v=10').catch(()=>{});
   });
 }
 
