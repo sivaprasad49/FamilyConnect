@@ -5,8 +5,8 @@
   "start_url": "/FamilyConnect/",
   "scope": "/FamilyConnect/",
   "display": "standalone",
-  "background_color": "#FFF8F5",
-  "theme_color": "#E8634A",
+  "background_color": "#F7F9FB",
+  "theme_color": "#16324F",
   "orientation": "portrait",
   "icons": [
     {

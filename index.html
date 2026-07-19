@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#E8634A">
+<meta name="theme-color" content="#16324F">
 <meta name="apple-mobile-web-app-title" content="FamilyConnect">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.svg">
@@ -16,18 +16,18 @@
 
   body{
     font-family:'Inter',system-ui,-apple-system,sans-serif;
-    background:#FFF8F5;
-    color:#2D2D2D;
+    background:#F7F9FB;
+    color:#1F2937;
     min-height:100vh;
     overflow-x:hidden;
   }
 
   /* Header */
   .header{
-    background:linear-gradient(135deg,#E8634A,#F4845F);
+    background:linear-gradient(135deg,#16324F,#1F4A6B);
     padding:24px 16px 16px;
     text-align:center;
-    box-shadow:0 2px 16px rgba(232,99,74,0.25);
+    box-shadow:0 2px 16px rgba(22,50,79,0.25);
   }
   .header .logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
   .header .logo svg{width:32px;height:32px}
@@ -38,9 +38,9 @@
   /* Filters */
   .filters{
     position:sticky;top:0;z-index:10;
-    background:#FFF8F5;
+    background:#F7F9FB;
     padding:12px 16px;
-    border-bottom:1px solid #F0E0D8;
+    border-bottom:1px solid #DCE3E8;
     box-shadow:0 2px 8px rgba(0,0,0,0.04);
   }
   .filter-row{display:flex;gap:8px;margin-bottom:10px}
@@ -50,89 +50,89 @@
 
   /* Name buttons */
   .name-btn{flex:1;padding:10px 0;font-size:15px;border-radius:12px}
-  .name-btn.active{background:#E8634A;color:#fff;box-shadow:0 3px 12px rgba(232,99,74,0.3)}
-  .name-btn:not(.active){background:#FDE8E4;color:#C4553E}
+  .name-btn.active{background:#1F6F78;color:#fff;box-shadow:0 3px 12px rgba(31,111,120,0.3)}
+  .name-btn:not(.active){background:#E7F1F1;color:#16324F}
 
   /* Day buttons */
   .day-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .day-scroll::-webkit-scrollbar{display:none}
   .day-btn{flex-shrink:0;padding:8px 12px;font-size:12px;font-weight:600;border-radius:10px;min-width:56px;text-align:center}
-  .day-btn.active{background:#E8634A;color:#fff;box-shadow:0 2px 8px rgba(232,99,74,0.25)}
-  .day-btn:not(.active){background:#FDE8E4;color:#B5604E}
+  .day-btn.active{background:#1F6F78;color:#fff;box-shadow:0 2px 8px rgba(31,111,120,0.25)}
+  .day-btn:not(.active){background:#E7F1F1;color:#3C6B72}
   .day-btn .label{font-size:9px;margin-top:2px;opacity:.7;font-weight:500}
 
   /* Type buttons */
   .type-btn{flex:1;padding:8px 0;font-size:12px;font-weight:600;border-radius:10px}
-  .type-btn:not(.active){background:#F5EDE8;color:#8B7B72}
-  .type-btn.active[data-t="All"]{background:#E8634A;color:#fff}
-  .type-btn.active[data-t="Yoga"]{background:#7C5CBF;color:#fff}
-  .type-btn.active[data-t="Breathing"]{background:#3D9970;color:#fff}
-  .type-btn.active[data-t="Exercise"]{background:#C4841D;color:#fff}
+  .type-btn:not(.active){background:#EEF2F4;color:#6B7280}
+  .type-btn.active[data-t="All"]{background:#1F6F78;color:#fff}
+  .type-btn.active[data-t="Yoga"]{background:#7C5CC4;color:#fff}
+  .type-btn.active[data-t="Breathing"]{background:#3AAFA9;color:#fff}
+  .type-btn.active[data-t="Exercise"]{background:#E08A2E;color:#fff}
 
   /* Content */
   .content{padding:16px}
 
   .day-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
   .day-header .emoji{font-size:22px}
-  .day-header h2{font-size:22px;font-weight:800;color:#2D2D2D}
-  .day-header .tag{font-size:12px;color:#E8634A;font-weight:700;background:#FDE8E4;padding:2px 10px;border-radius:20px;margin-left:4px}
+  .day-header h2{font-size:22px;font-weight:800;color:#1F2937}
+  .day-header .tag{font-size:12px;color:#F26B4A;font-weight:700;background:#FCE7E1;padding:2px 10px;border-radius:20px;margin-left:4px}
 
   /* Cards */
   .card{margin-bottom:20px;border-radius:16px;overflow:hidden;border:1.5px solid;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
-  .card.Yoga{background:#F8F3FF;border-color:#D4BFF0}
-  .card.Breathing{background:#EEFBF5;border-color:#A8E6CC}
-  .card.Exercise{background:#FFF7ED;border-color:#F0C78A}
+  .card.Yoga{background:#F5F2FC;border-color:#D9CCF2}
+  .card.Breathing{background:#EAF7F6;border-color:#B9E4E1}
+  .card.Exercise{background:#FDF4E8;border-color:#F0CE99}
 
   .card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-  .card.Yoga .card-head{border-bottom:1px solid #E8D8F8}
-  .card.Breathing .card-head{border-bottom:1px solid #C8EDDB}
-  .card.Exercise .card-head{border-bottom:1px solid #F0DDB8}
+  .card.Yoga .card-head{border-bottom:1px solid #E9E1F7}
+  .card.Breathing .card-head{border-bottom:1px solid #CFEEEC}
+  .card.Exercise .card-head{border-bottom:1px solid #F5E1BE}
 
   .card-type{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-  .card.Yoga .card-type{color:#7C5CBF}
-  .card.Breathing .card-type{color:#3D9970}
-  .card.Exercise .card-type{color:#C4841D}
+  .card.Yoga .card-type{color:#7C5CC4}
+  .card.Breathing .card-type{color:#3AAFA9}
+  .card.Exercise .card-type{color:#E08A2E}
 
-  .card-title{font-size:16px;font-weight:700;color:#2D2D2D;margin-top:3px}
-  .card-time{font-size:11px;color:#8B7B72;text-align:right;white-space:nowrap;font-weight:500}
+  .card-title{font-size:16px;font-weight:700;color:#1F2937;margin-top:3px}
+  .card-time{font-size:11px;color:#6B7280;text-align:right;white-space:nowrap;font-weight:500}
 
-  .card-note{padding:8px 16px;font-size:12px;color:#7B6B60;font-style:italic}
-  .card.Yoga .card-note{background:rgba(124,92,191,0.06);border-bottom:1px solid #E8D8F8}
-  .card.Breathing .card-note{background:rgba(61,153,112,0.06);border-bottom:1px solid #C8EDDB}
-  .card.Exercise .card-note{background:rgba(196,132,29,0.06);border-bottom:1px solid #F0DDB8}
+  .card-note{padding:8px 16px;font-size:12px;color:#6B7280;font-style:italic}
+  .card.Yoga .card-note{background:rgba(124,92,196,0.06);border-bottom:1px solid #E9E1F7}
+  .card.Breathing .card-note{background:rgba(58,175,169,0.06);border-bottom:1px solid #CFEEEC}
+  .card.Exercise .card-note{background:rgba(224,138,46,0.06);border-bottom:1px solid #F5E1BE}
 
   .card-body{padding:12px 16px}
 
-  .item{padding:8px 0;font-size:14px;line-height:1.6;color:#3D3D3D;border-bottom:1px solid rgba(0,0,0,0.05)}
+  .item{padding:8px 0;font-size:14px;line-height:1.6;color:#1F2937;border-bottom:1px solid rgba(0,0,0,0.05)}
   .item:last-child{border-bottom:none}
   .item.sub{color:#6B7280;font-style:italic;padding-left:16px;font-size:13px}
-  .item.warn{color:#B45309;font-size:13px;font-weight:500}
+  .item.warn{color:#B7791F;font-size:13px;font-weight:500}
   .item .num{font-weight:700;margin-right:8px;font-size:13px}
-  .card.Yoga .num{color:#7C5CBF}
-  .card.Breathing .num{color:#3D9970}
-  .card.Exercise .num{color:#C4841D}
+  .card.Yoga .num{color:#7C5CC4}
+  .card.Breathing .num{color:#3AAFA9}
+  .card.Exercise .num{color:#E08A2E}
 
   /* Section blocks (for exercise) */
   .sec-head{padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:10px;font-size:13px;font-weight:700;margin-bottom:8px;letter-spacing:.3px}
-  .card.Yoga .sec-head{color:#7C5CBF}
-  .card.Breathing .sec-head{color:#3D9970}
-  .card.Exercise .sec-head{color:#C4841D}
+  .card.Yoga .sec-head{color:#7C5CC4}
+  .card.Breathing .sec-head{color:#3AAFA9}
+  .card.Exercise .sec-head{color:#E08A2E}
 
   .sec-block{margin-bottom:16px}
   .sec-block:last-child{margin-bottom:0}
 
-  .sec-item{padding:6px 8px;font-size:13px;line-height:1.6;color:#3D3D3D;border-bottom:1px solid rgba(0,0,0,0.04)}
+  .sec-item{padding:6px 8px;font-size:13px;line-height:1.6;color:#1F2937;border-bottom:1px solid rgba(0,0,0,0.04)}
   .sec-item:last-child{border-bottom:none}
   .sec-item.sub{color:#6B7280;font-style:italic;padding-left:16px}
-  .sec-item.warn{color:#B45309;font-weight:500}
+  .sec-item.warn{color:#B7791F;font-weight:500}
   .sec-item.group{font-weight:700;font-size:12px;letter-spacing:.4px;text-transform:uppercase;padding:10px 8px 2px;margin-top:4px;border-bottom:none;opacity:.7}
-  .card.Exercise .sec-item.group{color:#C4841D}
+  .card.Exercise .sec-item.group{color:#B8691E}
 
   /* Footer */
   .footer{padding:20px 16px 12px;text-align:center}
-  .footer .pain{font-size:11px;color:#8B7B72;margin-bottom:12px}
-  .footer .brand{font-size:11px;color:#B5A69E;font-weight:500}
-  .footer .brand strong{color:#E8634A;font-weight:700}
+  .footer .pain{font-size:11px;color:#6B7280;margin-bottom:12px}
+  .footer .brand{font-size:11px;color:#94A3AE;font-weight:500}
+  .footer .brand strong{color:#F26B4A;font-weight:700}
 
   /* Safe area for notched phones */
   @supports(padding-top: env(safe-area-inset-top)){
@@ -141,43 +141,43 @@
   }
 
   /* Food card */
-  .card.Food{background:#EFF8ED;border-color:#A8D9A0}
-  .card.Food .card-head{border-bottom:1px solid #C9E8C2}
-  .card.Food .card-type{color:#2F9E44}
-  .card.Food .card-note{background:rgba(47,158,68,0.06);border-bottom:1px solid #C9E8C2}
-  .card.Food .sec-head{color:#2F9E44}
-  .type-btn.active[data-t="Food"]{background:#2F9E44;color:#fff}
+  .card.Food{background:#EFF8EF;border-color:#C3E2C6}
+  .card.Food .card-head{border-bottom:1px solid #DCEEDD}
+  .card.Food .card-type{color:#4F9D59}
+  .card.Food .card-note{background:rgba(79,157,89,0.06);border-bottom:1px solid #DCEEDD}
+  .card.Food .sec-head{color:#4F9D59}
+  .type-btn.active[data-t="Food"]{background:#4F9D59;color:#fff}
 
-  .meal-ref{padding:10px 12px;border-radius:12px;background:#fff;margin-bottom:8px;border:1.5px solid #DCEEDA}
+  .meal-ref{padding:10px 12px;border-radius:12px;background:#fff;margin-bottom:8px;border:1.5px solid #DCEEDD}
   .meal-ref:last-child{margin-bottom:0}
-  .meal-name{font-size:14px;font-weight:700;color:#2D2D2D}
-  .meal-macros{font-size:11px;color:#6B8A63;margin-top:2px}
+  .meal-name{font-size:14px;font-weight:700;color:#1F2937}
+  .meal-macros{font-size:11px;color:#5E8A63;margin-top:2px}
 
   .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .macro-pill{background:#fff;border:1px solid #DCEEDA;border-radius:12px;padding:10px 6px;text-align:center}
-  .macro-val{font-size:15px;font-weight:800;color:#2F9E44}
-  .macro-label{font-size:10px;color:#6B8A63;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+  .macro-pill{background:#fff;border:1px solid #DCEEDD;border-radius:12px;padding:10px 6px;text-align:center}
+  .macro-val{font-size:15px;font-weight:800;color:#4F9D59}
+  .macro-label{font-size:10px;color:#5E8A63;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 
   /* Progress tab */
-  .day-btn.prog-tab{background:#DCF0EA;color:#1C8C74}
-  .day-btn.prog-tab.active{background:#1C8C74;color:#fff;box-shadow:0 2px 8px rgba(28,140,116,.3)}
+  .day-btn.prog-tab{background:#E6F0F8;color:#2878B5}
+  .day-btn.prog-tab.active{background:#2878B5;color:#fff;box-shadow:0 2px 8px rgba(40,120,181,.3)}
 
-  .prog-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1.5px solid #F0E0D8}
-  .prog-title{font-size:13px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#8B7B72;margin-bottom:10px}
-  .prog-subtitle{font-size:12px;font-weight:600;color:#8B7B72;margin:10px 0 6px}
-  .prog-label{font-size:12px;font-weight:600;color:#8B7B72;display:block;margin-bottom:6px}
-  .prog-hint{font-size:11px;color:#B5A69E;margin-top:8px;font-style:italic}
-  .prog-input{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #F0E0D8;font-family:inherit;font-size:14px;background:#FFF8F5;resize:vertical}
+  .prog-card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1.5px solid #DCE3E8}
+  .prog-title{font-size:13px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;color:#6B7280;margin-bottom:10px}
+  .prog-subtitle{font-size:12px;font-weight:600;color:#6B7280;margin:10px 0 6px}
+  .prog-label{font-size:12px;font-weight:600;color:#6B7280;display:block;margin-bottom:6px}
+  .prog-hint{font-size:11px;color:#94A3AE;margin-top:8px;font-style:italic}
+  .prog-input{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid #DCE3E8;font-family:inherit;font-size:14px;background:#F7F9FB;resize:vertical}
 
-  .bmi-pill{display:inline-flex;align-items:baseline;gap:6px;background:#FDE8E4;border-radius:12px;padding:8px 14px;margin:10px 0 4px}
-  .bmi-val{font-size:20px;font-weight:800;color:#E8634A}
-  .bmi-label{font-size:11px;font-weight:700;color:#C4553E;text-transform:uppercase;letter-spacing:.3px}
+  .bmi-pill{display:inline-flex;align-items:baseline;gap:6px;background:#E6F0F8;border-radius:12px;padding:8px 14px;margin:10px 0 4px}
+  .bmi-val{font-size:20px;font-weight:800;color:#2878B5}
+  .bmi-label{font-size:11px;font-weight:700;color:#1F5D8C;text-transform:uppercase;letter-spacing:.3px}
 
   .flag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-  .flag-chip{padding:8px 14px;border-radius:20px;background:#F5EDE8;color:#8B7B72;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent}
-  .flag-chip.active-green{background:#3D9970;color:#fff}
-  .flag-chip.active-yellow{background:#C4841D;color:#fff}
-  .flag-chip.active-red{background:#D9483A;color:#fff}
+  .flag-chip{padding:8px 14px;border-radius:20px;background:#EEF2F4;color:#6B7280;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent}
+  .flag-chip.active-green{background:#2E8B57;color:#fff}
+  .flag-chip.active-yellow{background:#CC8A3C;color:#fff}
+  .flag-chip.active-red{background:#F26B4A;color:#fff}
 </style>
 </head>
 <body>
@@ -586,7 +586,7 @@ function setState(key,val){state[key]=val;if(key==="name")state.type="All";rende
 // Register Service Worker
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js?v=10').catch(()=>{});
+    navigator.serviceWorker.register('sw.js?v=11').catch(()=>{});
   });
 }
 
