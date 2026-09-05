@@ -208,18 +208,20 @@
 <script>
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const TYPES=["Yoga","Breathing","Exercise","Food"];
-const NAMES=["Siva","Sutharia","Swara","Sreenandha"];
+const NAMES=["Siva","Sutharia","Sutharia Quick","Swara","Sreenandha"];
 const KID_NAMES=["Swara","Sreenandha"];
 const dayShort={Monday:"Mon",Tuesday:"Tue",Wednesday:"Wed",Thursday:"Thu",Friday:"Fri",Saturday:"Sat",Sunday:"Sun"};
 const dayTag={
   Siva:{Monday:"RECOVERY",Tuesday:"UPPER A",Wednesday:"LOWER A",Thursday:"UPPER B",Friday:"RECOVERY",Saturday:"LOWER B",Sunday:"V-TAPER"},
   Sutharia:{Monday:"RECOVERY",Tuesday:"UPPER A",Wednesday:"LOWER A",Thursday:"RECOVERY",Friday:"UPPER B",Saturday:"LOWER B",Sunday:"CONDITIONING"},
+  "Sutharia Quick":{Monday:"GLUTES/QUADS",Tuesday:"UPPER A",Wednesday:"RECOVERY",Thursday:"GLUTES/HAMS",Friday:"UPPER B",Saturday:"CORE",Sunday:"RECOVERY"},
   Swara:{Monday:"SPEED",Tuesday:"STRONG",Wednesday:"DANCE",Thursday:"ANIMAL",Friday:"JUMP",Saturday:"FAMILY",Sunday:"YOGA"},
   Sreenandha:{Monday:"SAFARI",Tuesday:"COLORS",Wednesday:"DANCE",Thursday:"BALANCE",Friday:"BALLOON",Saturday:"FAMILY",Sunday:"YOGA"}
 };
 const dayEmoji={
   Siva:{Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E0}",Thursday:"\u{1F535}",Friday:"\u{1F7E2}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
   Sutharia:{Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E0}",Thursday:"\u{1F7E2}",Friday:"\u{1F535}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
+  "Sutharia Quick":{Monday:"\u{1F535}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E2}",Thursday:"\u{1F535}",Friday:"\u{1F535}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
   Swara:{Monday:"\u{1F535}",Tuesday:"\u{1F7E0}",Wednesday:"\u{1F7E3}",Thursday:"\u{1F7E2}",Friday:"\u{1F535}",Saturday:"\u{1F7E0}",Sunday:"\u{1F7E3}"},
   Sreenandha:{Monday:"\u{1F7E2}",Tuesday:"\u{1F535}",Wednesday:"\u{1F7E3}",Thursday:"\u{1F7E0}",Friday:"\u{1F535}",Saturday:"\u{1F7E2}",Sunday:"\u{1F7E3}"}
 };
@@ -414,6 +416,57 @@ sections:[
 ]
 }
 },
+"Sutharia Quick":{
+days:{
+Monday:{
+Exercise:{time:"~15-20 min",title:"Glutes + Quads",sections:[
+{name:"WARM-UP (~3 min)",items:["March in place – 30 sec","Hip circles – 20 sec each direction","Chair Sit-to-Stand – 8 slow reps","Glute Bridge – 10 reps","Ankle pumps – 10-15 reps"]},
+{name:"STRENGTH",items:["Superset A – Squat + Hip Thrust","A1: Goblet Squat – 2×8-12 (no equip: Chair Sit-to-Stand or Body-Weight Squat)","A2: Hip Thrust – 2×10-15 (no equip: Floor Glute Bridge or Single-Leg Glute Bridge)","Superset B – Hip Abduction + Calf Raise","B1: Hip Abduction – 2×12-15/side (no equip: Side-Lying Hip Abduction)","B2: Calf Raise – 1-2×15-20 (no equip: Body-Weight Standing Calf Raise)","  ↳ Rest about 30-45 sec between rounds","  ↳ Most sets should finish with 2-3 reps still possible – don't train to failure. Stop for sharp joint pain, swelling, warmth, instability, pelvic pressure, or leakage."]},
+{name:"IF SHORT ON TIME (~8-10 min)",items:["Warm-up – 2 min","Squat or Split Squat – 2 sets","Hip Thrust / Glute Bridge – 2 sets","Hip Abduction – 1 set","  ↳ On an extremely tiring store day, do this instead of skipping the week entirely"]}
+]}
+},
+Tuesday:{
+Exercise:{time:"~15-20 min",title:"Back + Chest + Shoulders",sections:[
+{name:"WARM-UP (~3 min)",items:["Shoulder circles – 10 forward + 10 backward","Cat-Cow – 6-8 reps","Scapular Wall Slide – 8 reps","Wall Push-Up Plus – 8 reps"]},
+{name:"STRENGTH",items:["Superset A – Lat Pulldown + Press","A1: Lat Pulldown – 2×8-12 (no equip: Prone Floor Pulldown)","A2: DB or Incline Press – 2×8-12 (no equip: Wall Push-Up, Bench Push-Up, or Floor Push-Up)","Superset B – Row + Lateral Raise","B1: Cable Row – 2×10-12 (no equip: Prone W Raise or Self-Resisted Row)","B2: Lateral Raise – 2×12-15 (no equip: Wall Lateral Isometric Hold, 20-30 sec/side)","  ↳ Rest about 30-45 sec between rounds"]},
+{name:"IF SHORT ON TIME (~8-10 min)",items:["Warm-up – 2 min","Row / Prone W – 2 sets","Press / Push-Up – 2 sets","Lateral Raise / Wall Isometric – 1 set","  ↳ That still keeps the weekly habit alive"]}
+]}
+},
+Wednesday:{
+Exercise:{time:"~15-20 min",title:"Core + Mobility / Recovery",note:"Intentionally lighter – her job already adds standing, carrying, reaching, and ladder work.",sections:[
+{name:"WARM-UP (~2-3 min)",items:["Easy march – 30 sec","Cat-Cow – 6-8 reps","Pelvic tilts – 8 reps","Slow diaphragmatic breathing – 3-4 breaths"]},
+{name:"CORE",items:["Dead Bug – 2×8/side (same)","Side Plank – 2×20-30 sec/side (no equip: Bent-Knee Side Plank or Elevated Side Plank)","Bird Dog – 2×8/side (same)"]},
+{name:"MOBILITY (~5 min)",items:["Hip-flexor stretch","Hamstring stretch","Chest stretch","Calf stretch","Gentle thoracic rotation","  ↳ Hold each stretch comfortably for about 20-30 sec"]},
+{name:"JOINT-SAFETY TRAFFIC LIGHT",items:["Green – pain 0-2/10, no unusual warmth or swelling, normal movement, back to baseline by next morning: train normally","Yellow – mild stiffness/pain 3-4/10, mild tenderness, more fatigue than usual: reduce load/reps/sets by 25-50%, use the body-weight version, reduce range of motion, keep movement controlled","⚠️ Red – visible swelling, redness/warmth, significant pain, joint instability, major loss of function, symptoms persisting or worsening: avoid loading that joint and seek medical evaluation if significant or recurrent"]}
+]}
+},
+Thursday:{
+Exercise:{time:"~15-20 min",title:"Glutes + Hamstrings",sections:[
+{name:"WARM-UP (~3 min)",items:["March in place – 30 sec","Hip-hinge drill – 8 reps","Glute Bridge – 10 reps","Supported Split Squat – 5/side","Ankle pumps – 10 reps"]},
+{name:"STRENGTH",items:["Superset A – RDL + Supported Split Squat","A1: Romanian Deadlift – 2×8-12 (no equip: Slow Body-Weight Hip Hinge or Supported Single-Leg Hinge)","A2: Supported Split Squat – 2×8-10/side (no equip: Split Squat with rear foot on floor, holding wall/chair)","Superset B – Hip Thrust/Kickback + Hip Abduction","B1: Hip Thrust or Glute Kickback – 2×10-15 (no equip: Glute Bridge, Donkey Kick, or Quadruped Hip Extension)","B2: Hip Abduction – 2×12-15/side (no equip: Side-Lying Hip Abduction)","  ↳ Rest about 45 sec between rounds"]}
+]}
+},
+Friday:{
+Exercise:{time:"~15-20 min",title:"Upper Back + Shoulders + Arms",note:"Keep arm work short – shoulders and upper back are the bigger physique priority.",sections:[
+{name:"WARM-UP (~3 min)",items:["Shoulder circles – 10 each direction","Cat-Cow – 6 reps","Scapular Wall Slide – 8 reps","Wall Push-Up Plus – 8 reps"]},
+{name:"STRENGTH",items:["Superset A – Row + Press","A1: Chest-Supported Row – 2×8-12 (no equip: Prone T-to-W Raise)","A2: Incline DB Press – 2×8-12 (no equip: Elevated Push-Up or Wall Push-Up)","Superset B – Face Pull + Curl + Triceps","B1: Face Pull / Rear-Delt Fly – 2×12-15 (no equip: Prone W Raise or Prone T Raise)","B2: Biceps Curl – 1-2×10-15 (no equip: Self-Resisted Curl)","B3: Triceps Extension / Pushdown – 1-2×10-15 (no equip: Close-Grip Wall or Elevated Push-Up)"]}
+]}
+},
+Saturday:{
+Exercise:{time:"~15-20 min",title:"Core + Posture + Athletic",note:"Keep this day moderate, not exhausting.",sections:[
+{name:"WARM-UP (~3 min)",items:["Easy march – 30 sec","Hip circles – 20 sec","Shoulder circles – 20 sec","Wall Slide – 8 reps","Supported Single-Leg Balance – 15 sec/side"]},
+{name:"TRAINING",items:["Pallof Press – 2×10/side (no equip: Dead Bug with opposite-hand thigh press)","Farmer Carry – 2×30-40 sec (no equip: Tall March in place with strong abdominal brace and hard hand squeeze)","Wall Slide – 2×10 (same)","Dead Bug – 2×8/side (same)","Supported Single-Leg Balance – 1-2×20-30 sec/side (same, with fingertip support)"]},
+{name:"OPTIONAL IF TIME REMAINS",items:["Step-touch","Easy shadow boxing","Low-impact dance","Gentle treadmill/bike"]}
+]}
+},
+Sunday:{
+Exercise:{time:"~0-15 min",title:"Recovery",note:"No formal strength workout required today.",sections:[
+{name:"CHOOSE ONE (15-30 min)",items:["Easy family walk","Gentle yoga","Comfortable stretching","Easy stationary bike","Full rest when physically tired from work"]},
+{name:"OPTIONAL 5-MINUTE RECOVERY MOBILITY",items:["Cat-Cow – 6 reps","Hip-flexor stretch – 20-30 sec/side","Hamstring stretch – 20-30 sec/side","Chest stretch – 20-30 sec/side","Calf stretch – 20-30 sec/side","Slow breathing – 5 breaths"]}
+]}
+}
+}
+},
 Swara:{
 days:{
 Monday:{
@@ -537,7 +590,7 @@ Exercise:{time:"30 min total",title:"Yoga Story",sections:[
 };
 
 // ---------- Weekly check-in (localStorage, one persistent record per person) ----------
-const HEIGHT_M={Siva:1.64,Sutharia:1.50};
+const HEIGHT_M={Siva:1.64,Sutharia:1.50,"Sutharia Quick":1.50};
 function todayKey(){return new Date().toLocaleDateString('en-CA')}
 function blankCheckin(){return{weight:"",waist:"",hip:"",water:"",food:"",moved:"",fun:"",notes:"",updatedAt:""}}
 function getCheckin(name){
@@ -605,7 +658,8 @@ function renderFoodCard(food){
 function renderDay(d){
   const dayData=d.days[state.day];
   const hasYoga=!!(d.days.Monday&&d.days.Monday.Yoga);
-  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga));
+  const hasBreathing=!!(d.days.Monday&&d.days.Monday.Breathing);
+  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga)&&(t!=="Breathing"||hasBreathing));
   const types=state.type==="All"?availTypes:(availTypes.includes(state.type)?[state.type]:availTypes);
   let html=`<div class="day-header"><span class="emoji">${dayEmoji[state.name][state.day]}</span><div><h2>${state.day}</h2></div><span class="tag">${dayTag[state.name][state.day]}</span></div>`;
 
@@ -721,7 +775,8 @@ function render(){
   }else{
     typeRowEl.style.display="flex";
     const hasYoga=!!(d.days.Monday&&d.days.Monday.Yoga);
-  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga));
+  const hasBreathing=!!(d.days.Monday&&d.days.Monday.Breathing);
+  const availTypes=TYPES.filter(t=>(t!=="Food"||d.food)&&(t!=="Yoga"||hasYoga)&&(t!=="Breathing"||hasBreathing));
     let th="";
     ["All",...availTypes].forEach(t=>{
       const em=t==="All"?"\u{1f4cb}":typeEmoji[t];
@@ -747,7 +802,7 @@ function setState(key,val){state[key]=val;if(key==="name")state.type="All";rende
 // Register Service Worker
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js?v=14').catch(()=>{});
+    navigator.serviceWorker.register('sw.js?v=15').catch(()=>{});
   });
 }
 
